@@ -21,7 +21,7 @@ describe "Authorization" do
     @default_config.recursively!{ |h| h.symbolize_keys! }
   end
   
-  it "should create an Authorization object configured with the keys for the label specified" do
+  it "should use the config file in the current working directory" do
     compare_authorization_instance({}, @default_config)
   end
   
