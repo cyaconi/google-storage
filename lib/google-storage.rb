@@ -1,13 +1,14 @@
 require 'net/http'
 require 'uri'
 require 'base64'
-#require 'hmac/sha1'
-require 'hmac'
+require 'hmac/sha1'
+#require 'hmac'
 require 'kconv'
 require 'yaml'
 require 'ostruct'
 
 require 'nokogiri'
+#require 'openssl'
 
 require 'facets/kernel/__method__'
 require 'facets/hash/merge'

@@ -23,6 +23,9 @@ module GoogleStorage
     private
     # generate a base64 encoded sha1 digest of the message
     def signature(message)
+      #digest = OpenSSL::Digest::Digest.new('sha1')
+      #b64_hmac = Base64.encode64(OpenSSL::HMAC.digest(digest, @secret_key, str)).gsub("\n","")
+      #Base64.encode64(OpenSSL::HMAC::SHA1.digest(@keys[:secret_key], message)).gsub("\n", "").toutf8
       Base64.encode64(HMAC::SHA1.digest(@keys[:secret_key], message)).gsub("\n", "").toutf8
     end
 

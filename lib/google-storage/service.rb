@@ -11,7 +11,7 @@ module GoogleStorage
       unless res.instance_of? Net::HTTPOK
         code    = doc.xpath("/Error/Code").text
         message = doc.xpath("/Error/Message").text
-        raise ServiceListBucketsException, "#{code}: #{message}" 
+        raise GoogleStorage::RequestMethodException(code), "#{message}" 
       end
       doc.xpath("//xmlns:Bucket").map do |node|
         { :name    => node.xpath("xmlns:Name").text, 
@@ -22,9 +22,13 @@ module GoogleStorage
     # get the named bucket. returns an instance of Bucket if the bucket exists.
     # if autocreate is true, then the bucket is first created before returning
     # an instance of Bucket.
-    def fetch(bucket, autocreate = false)
-      bucket = Bucket.new(bucket, @authorization, autocreate)
-      bucket if bucket.exists?
+    def get(bucket, autocreate = false)
+      begin
+        bucket = Bucket.new(bucket, @authorization, autocreate)
+        bucket if bucket.exists?
+      rescue InvalidBucketNameException => e
+        raise e if autocreate
+      end
     end
   end
 end

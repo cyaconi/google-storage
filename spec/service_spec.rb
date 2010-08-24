@@ -3,36 +3,43 @@ include GoogleStorage
 
 describe "Service" do
   before :each do
+    @bucket_name   = "test-bucket-20100829"
     @authorization = Authorization.new('test', 'fixtures/google-storage.yml')
-    @service       = Service.new(@acl)
+    @service       = Service.new(@authorization)
   end
   
   it "should create an instance of Service" do
+    @authorization.should be_an_instance_of Authorization
     @service.should be_an_instance_of Service
   end
 
   it "should list all of the buckets that are owned by the requester" do
-    flunk "--- NOT IMPLEMENTED ---"
-  end
-
-  it "should be able to retrieve a bucket by name if the bucket exists" do
-    flunk "--- NOT IMPLEMENTED ---"
+    lambda{ @service.buckets }.should_not raise_error
+    @service.buckets.should be_an_instance_of Array
   end
 
   it "should not be able to retrieve a bucket if the bucket does not exist" do
-    flunk "--- NOT IMPLEMENTED ---"
+    bkt = @service.get(@bucket_name)
+    bkt.should be nil
   end
 
-  it "should be able to automatically create a bucket if the bucket it does not exist" do
-    flunk "--- NOT IMPLEMENTED ---"
+  it "should be able to automatically create a bucket if the bucket does not exist" do
+    bkt = @service.get(@bucket_name, true)
+    bkt.should_not be nil
+    bkt.name.should match @bucket_name
+    @service.buckets.length.should equal 1
+    bkt.delete
+    @service.buckets.length.should equal 0
   end
 
   it "should accept a block that allows the client to communicate with the Service" do
-    flunk "--- NOT IMPLEMENTED ---"
-    #Service.new(@acl) do 
-    #  buckets.should blah
-    #  bkt = fetch 'google-storage-gem-test-bucket-9fac50aacc069b716cc84ae56a5a1f27'
-    #  bkt.should blah
-    #end
+    bucket_name = @bucket_name
+    @sevice = Service.new(@authorization) do 
+      buckets
+      get(bucket_name)
+      bkt = get(bucket_name, true)
+      bkt.delete
+    end
+    @service.should be_an_instance_of Service
   end
 end

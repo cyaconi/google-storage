@@ -1,5 +1,7 @@
 module GoogleStorage
   class Bucket < RequestMethods
+    attr_reader :name
+    
     def initialize(name, authorization, autocreate = false, &block)
       @name          = name
       @authorization = authorization
@@ -8,7 +10,6 @@ module GoogleStorage
       # if bucket DOES NOT EXIST then create it if autocreate is true
       # if autocreate is false then do nothing???
       create if not exists? and autocreate
-
       instance_eval &block if block_given?
     end
 
@@ -21,13 +22,11 @@ module GoogleStorage
     def create(acl = nil)
       options = { :path => "/#{@name}/" }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
-
       res, doc = exec(:put, options)
-      
       unless res.instance_of? Net::HTTPOK
         code    = doc.xpath("/Error/Code").text
         message = doc.xpath("/Error/Message").text
-        raise BucketCreateException, "#{code}: #{message}" 
+        raise GoogleStorage::RequestMethodException(code), "#{message}" 
       end
     end
 
@@ -41,7 +40,7 @@ module GoogleStorage
         unless res.instance_of? Net::HTTPNotFound
           code    = doc.xpath("/Error/Code").text
           message = doc.xpath("/Error/Message").text
-          raise BucketCreateException, "#{code}: #{message}" 
+          raise GoogleStorage::RequestMethodException(code), "#{message}" 
         end
       end
     end
@@ -53,7 +52,7 @@ module GoogleStorage
       unless res.instance_of? Net::HTTPOK
         code    = doc.xpath("/Error/Code").text
         message = doc.xpath("/Error/Message").text
-        raise BucketCreateException, "#{code}: #{message}" 
+        raise GoogleStorage::RequestMethodException(code), "#{message}" 
       end
     end
     
@@ -63,7 +62,7 @@ module GoogleStorage
       unless res.instance_of? Net::HTTPNoContent
         code    = doc.xpath("/Error/Code").text
         message = doc.xpath("/Error/Message").text
-        raise BucketDeleteException, "#{code}: #{message}" 
+        raise GoogleStorage::RequestMethodException(code), "#{message}" 
       end
     end
       
