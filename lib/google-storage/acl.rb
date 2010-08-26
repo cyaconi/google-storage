@@ -7,6 +7,12 @@ module GoogleStorage
     AUTHENTICATED_READ            = 'authenticated-read'
     BUCKET_OWNER_READ             = 'bucket-owner-read'
     BUCKET_OWNER_FULL_CONTROL     = 'bucket-owner-full-control'
+    ALLOWED_ACLS                  = [ PRIVATE, 
+                                      PUBLIC_READ, 
+                                      PUBLIC_READ_WRITE, 
+                                      AUTHENTICATED_READ, 
+                                      BUCKET_OWNER_READ, 
+                                      BUCKET_OWNER_FULL_CONTROL ]
 
     # used when declaring permission in acl document
     PERMISSION_READ               = 'READ'
@@ -117,9 +123,15 @@ module GoogleStorage
       doc = Nokogiri::XML::Builder.new(:encoding => 'utf-8'){ |xml| xml.AccessControlList{ xml.Entries } }
       doc = Nokogiri::XML(doc.to_xml)
       doc.at("Entries").before(@owner.to_xml.at("Owner"))
-      @entries.each do |entry|
-        doc.at("Entries").add_child(entry.to_xml.at("Entry"))
-      end
+      
+      # TODO: refactor/sexify. 
+      # always include an acl entry representing the owner, but 
+      # ensure only one entry representing the owner is in the acl
+      owner = @owner.as_acl_entry
+      remove(owner)
+      doc.at("Entries").add_child(owner.to_xml.at("Entry")) 
+      
+      @entries.each{ |entry| doc.at("Entries").add_child(entry.to_xml.at("Entry")) }
       doc
     end
     

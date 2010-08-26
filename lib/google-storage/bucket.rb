@@ -31,7 +31,6 @@ module GoogleStorage
     end
 
     # Get the ACLs of the bucket
-    # TODO: parse result
     def acl
       res, doc = exec(:get, :path => "/#{@name}/?acl")
       if res.instance_of? Net::HTTPOK
@@ -78,11 +77,6 @@ module GoogleStorage
     #           delimiter.
     def objects(options = {})
       #
-    end
-    
-    # Save the changes in the bucket
-    # TODO
-    def save
     end
   end
 end

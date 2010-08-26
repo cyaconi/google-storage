@@ -24,9 +24,9 @@ module GoogleStorage
 
       options.each{ |k, v| req[k.to_s] = v }
       
-      req.each do |k, v|
-        puts "#{k}:\t#{v}"
-      end
+      #req.each do |k, v|
+      #  puts "#{k}:\t#{v}"
+      #end
       
       authorize(req)
       
