@@ -22,6 +22,7 @@ describe "Bucket" do
 
   it "should be able to specify a pre-defined acl when explicitly creating a bucket" do
     Acl::ALLOWED_ACLS.each{ |acl| attempt_bucket_creation @bucket_name, acl }
+    lambda{ attempt_bucket_creation @bucket_name, 'bad-acl' }.should raise_error
   end
 
   it "should return true or false if the exists? method is used" do
@@ -44,6 +45,10 @@ describe "Bucket" do
   end
 
   it "should be able to set a bucket's acl" do
+    # TODO
+  end
+  
+  it "should be able to delete buckets" do
     # TODO
   end
   
