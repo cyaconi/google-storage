@@ -13,47 +13,55 @@ describe "Bucket" do
   end
 
   it "should allow implicit bucket creation" do
-    attempt_bucket_creation @bucket_name, nil, true
+    bucket = attempt_create @bucket_name, nil, true
+    attempt_remove bucket
   end
 
   it "should allow explicit bucket creation" do
-    attempt_bucket_creation @bucket_name
+    bucket =  attempt_create @bucket_name
+    attempt_remove bucket
   end
 
   it "should be able to specify a pre-defined acl when explicitly creating a bucket" do
-    Acl::ALLOWED_ACLS.each{ |acl| attempt_bucket_creation @bucket_name, acl }
-    lambda{ attempt_bucket_creation @bucket_name, 'bad-acl' }.should raise_error
+    Acl::ALLOWED_ACLS.each do |acl| 
+      bucket = attempt_create @bucket_name, acl 
+      attempt_remove bucket
+    end
+    lambda{ attempt_create @bucket_name, 'bad-acl' }.should raise_error
   end
 
-  it "should return true or false if the exists? method is used" do
-    bucket = Bucket.new(@bucket_name, @authorization, true)
-    bucket.exists?.should be true
-    attempt_remove bucket
-    
-    bucket = Bucket.new(@bucket_name, @authorization)
-    bucket.exists?.should be false
-  end
-  
   it "should be able to retrieve a bucket's acl" do
-    bucket = Bucket.new(@bucket_name, @authorization, true)
-    bucket.exists?.should be true
-    
-    acl = bucket.acl
+    bucket = attempt_create @bucket_name, nil, true
+    acl    = bucket.acl
     acl.should be_an_instance_of Acl
-    
     attempt_remove bucket
   end
 
   it "should be able to set a bucket's acl" do
-    # TODO
+    bucket = attempt_create @bucket_name
+    acl    = bucket.acl
+    acl.add(:scope => :user, :permission => Acl::PERMISSION_READ, :identity => 'bodjiegalang@gmail.com')
+    acl.add(:scope => :all_users, :permission => Acl::PERMISSION_READ)
+    acl.add(:scope => :all_authenticated_users, :permission => Acl::PERMISSION_WRITE)
+    lambda{ bucket.acl = acl }.should_not raise_error
+    
+    # TODO - make sure new permissions are in the acl
+    #bucket = attempt_create @bucket_name, acl, true
+    #acl    = bucket.acl
+    #acl.include?
+    
+    attempt_remove bucket
   end
   
-  it "should be able to delete buckets" do
-    # TODO
+  # TODO need to finish implementation
+  it "should be able to list bucket contents" do
+    bucket   = Bucket.new('my-test-bucket', @authorization)
+    contents = bucket.contents(:delimiter => '/', :prefix => '/europe')
+    contents.should be_an_instance_of Array
   end
   
   protected
-  def attempt_bucket_creation(name, acl = nil, autocreate = nil)
+  def attempt_create(name, acl = nil, autocreate = nil)
     bucket = Bucket.new(name, @authorization, autocreate)
     if autocreate
       bucket.exists?.should be true     
@@ -63,7 +71,7 @@ describe "Bucket" do
       lambda{ bucket.create(acl) }.should_not raise_error
     end
     bucket.exists?.should be true
-    attempt_remove bucket
+    bucket
   end
   
   def attempt_remove(bucket)

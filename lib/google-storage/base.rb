@@ -2,16 +2,15 @@ module GoogleStorage
   # uri to gs services api
   HOST = "commondatastorage.googleapis.com"
 
-  def self.RequestMethodException(name)
-    klass = Class.new(Exception)
-    GoogleStorage.const_set "#{name}Exception", klass
-  end
+  class RequestMethodException < Exception; end
   
-  ## TODO: need better error management
-  #class RequestMethodException < Exception
-  #  def self.synthesize(name)
-  #    klass = Class.new self
-  #    Object.const_set name, klass
-  #  end
-  #end
+  def self.RequestMethodException(name)
+    const = "#{name}Exception".to_sym
+    if GoogleStorage.const_defined? const
+      GoogleStorage.const_get const
+    else
+      klass = Class.new(RequestMethodException)
+      GoogleStorage.const_set const, klass
+    end
+  end
 end

@@ -11,23 +11,29 @@ module GoogleStorage
       req["authorization"] = @authorization.generate(req, authsig)
     end
     
+    def raise_error(error)
+      code    = error.xpath("/Error/Code").text
+      message = error.xpath("/Error/Message").text
+      raise GoogleStorage::RequestMethodException(code), "#{message}" 
+    end
+    
     def exec(verb, options = { })
-      uri = URI.parse("http://#{HOST}/")
-      body = options.delete(:body)
-
-      req  = Kernel.constant("Net::HTTP::#{verb.to_s.capitalize}").new(options.delete(:path) || uri.path)
+      uri    = URI.parse("http://#{HOST}/")
+      body   = options.delete(:body)
+      path   = options.delete(:path) || uri.path
+      params = options.delete(:params)
+      unless params.nil? or params.empty?
+        params.stringify_keys!
+        path << "?#{params.keys.sort.map{ |k| "#{k}=#{params[k]}"}.join("&")}"
+      end
+      req = Kernel.constant("Net::HTTP::#{verb.to_s.capitalize}").new(path)
       req["content-length"] = body.nil? ? "0" : body.to_s.length
       req["content-type"]   = DEFAULT_CONTENT_TYPE
       req["user-agent"]     = USER_AGENT
       req["date"]           = timestamp
       req["host"]           = uri.host
-
       options.each{ |k, v| req[k.to_s] = v }
-      
-      #req.each do |k, v|
-      #  puts "#{k}:\t#{v}"
-      #end
-      
+      #req.each{ |k, v| puts "#{k}:\t#{v}" }
       authorize(req)
       
       res = Net::HTTP.new(uri.host).start{ |http| http.request(req, body) }

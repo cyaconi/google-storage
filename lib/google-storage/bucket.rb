@@ -23,11 +23,7 @@ module GoogleStorage
       options = { :path => "/#{@name}/" }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
       res, doc = exec(:put, options)
-      unless res.instance_of? Net::HTTPOK
-        code    = doc.xpath("/Error/Code").text
-        message = doc.xpath("/Error/Message").text
-        raise GoogleStorage::RequestMethodException(code), "#{message}" 
-      end
+      raise_error doc unless res.instance_of? Net::HTTPOK
     end
 
     # Get the ACLs of the bucket
@@ -36,11 +32,7 @@ module GoogleStorage
       if res.instance_of? Net::HTTPOK
         Acl.new(doc)
       else
-        unless res.instance_of? Net::HTTPNotFound
-          code    = doc.xpath("/Error/Code").text
-          message = doc.xpath("/Error/Message").text
-          raise GoogleStorage::RequestMethodException(code), "#{message}" 
-        end
+        raise_error doc unless res.instance_of? Net::HTTPNotFound
       end
     end
 
@@ -48,21 +40,13 @@ module GoogleStorage
     def acl=(acl)
       options  = { :path => "/#{@name}/?acl", :body => acl.to_s }
       res, doc = exec(:put, options)
-      unless res.instance_of? Net::HTTPOK
-        code    = doc.xpath("/Error/Code").text
-        message = doc.xpath("/Error/Message").text
-        raise GoogleStorage::RequestMethodException(code), "#{message}" 
-      end
+      raise_error doc unless res.instance_of? Net::HTTPOK
     end
     
     # delete bucket
     def delete
       res, doc = exec(:delete, :path => "/#{@name}/")
-      unless res.instance_of? Net::HTTPNoContent
-        code    = doc.xpath("/Error/Code").text
-        message = doc.xpath("/Error/Message").text
-        raise GoogleStorage::RequestMethodException(code), "#{message}" 
-      end
+      raise_error doc unless res.instance_of? Net::HTTPNoContent
     end
       
     # Get the list of objects in a bucket
@@ -72,11 +56,32 @@ module GoogleStorage
     #           Can be used in conjunction with a prefix.	
     # marker	  The object name from which you want to start listing objects.
     # max-keys	The maximum number of objects to return in a list object request.	
-    # prefix	   A string that can be used to limit the number of objects that are 
-    #            returned in a GET Bucket request. Can be used in conjunction with a 
+    # prefix	  A string that can be used to limit the number of objects that are 
+    #           returned in a GET Bucket request. Can be used in conjunction with a 
     #           delimiter.
-    def objects(options = {})
-      #
+    # 
+    # NOTE: Google Storage does not return lists longer than 1,000 objects.
+    def contents(options = { })
+      res, doc = exec(:get, :path => "/#{@name}/", :params => options)
+      raise_error doc unless res.instance_of? Net::HTTPOK
+      normalize = lambda do |k, v| 
+        case k
+        when 'last_modified' then DateTime.parse(v)
+        when 'size'          then v.to_i
+        when 'e_tag'         then v.sub(/"/, '')
+        when 'owner'         then Acl::Owner.new(v)
+        else v
+        end
+      end
+      puts doc
+      #  doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
+      @truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
+      doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+    end
+    
+    # check if the last request for bucket contents returned a truncated list 
+    def truncated?
+      @truncated
     end
   end
 end

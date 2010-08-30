@@ -8,15 +8,9 @@ module GoogleStorage
     # lists all of the buckets that are owned by the requester.
     def buckets
       res, doc = exec(:get)
-      unless res.instance_of? Net::HTTPOK
-        code    = doc.xpath("/Error/Code").text
-        message = doc.xpath("/Error/Message").text
-        raise GoogleStorage::RequestMethodException(code), "#{message}" 
-      end
-      doc.xpath("//xmlns:Bucket").map do |node|
-        { :name    => node.xpath("xmlns:Name").text, 
-          :created => DateTime.parse(node.xpath("xmlns:CreationDate").text) }
-      end
+      raise_error doc unless res.instance_of? Net::HTTPOK
+      normalize = lambda{ |k, v| k == :creation_date ? DateTime.parse(v) : v }
+      doc.xpath("//xmlns:Bucket").map{ |node| node.to_h(&normalize) }
     end
    
     # get the named bucket. returns an instance of Bucket if the bucket exists.

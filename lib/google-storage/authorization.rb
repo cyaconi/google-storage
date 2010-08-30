@@ -25,7 +25,6 @@ module GoogleStorage
     def signature(message)
       digest = OpenSSL::Digest::Digest.new('sha1')
       Base64.encode64(OpenSSL::HMAC.digest(digest, @keys[:secret_key], message)).gsub("\n", "").toutf8
-      #Base64.encode64(HMAC::SHA1.digest(@keys[:secret_key], message)).gsub("\n", "").toutf8
     end
 
     # construct the message to sign string based on 

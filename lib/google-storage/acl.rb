@@ -93,18 +93,11 @@ module GoogleStorage
 
       raise doc.errors.first unless doc.errors.empty?
         
-      extract = lambda do |child| 
-        k = child.name =~ /^ID$/ ? child.name.downcase : child.name
-        v = child.text.strip
-        [ k.methodize.to_sym, v ] 
-      end
-      
-      identity = doc.xpath("//Owner/*").map(&extract).to_h
-      @owner   = Owner.new(identity)
+      @owner   = Owner.new(doc.at("//Owner").to_h)
       @entries = doc.xpath("//Entries/*").map do |node|
         scope      = node.xpath("Scope/@type").to_s
         permission = node.xpath("Permission").text
-        identity   = node.xpath("Scope/*").map(&extract).to_h
+        identity   = node.at("Scope").to_h
         args       = [ permission ]
         args << identity unless Acl.special_scope? scope.methodize
         Entry.send(scope, *args)

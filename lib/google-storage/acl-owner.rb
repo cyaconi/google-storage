@@ -5,6 +5,7 @@ module GoogleStorage
       attr_reader :name
 
       def initialize(identity)
+        identity      = identity.to_h if identity.respond_to? :xpath
         @canonical_id = "#{identity[:id]}"
         raise ArgumentError, "A canonical id value must be specified using the `id` key" \
           unless Acl.canonical_id? @canonical_id
