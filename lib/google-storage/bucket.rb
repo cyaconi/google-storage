@@ -61,6 +61,9 @@ module GoogleStorage
     #           delimiter.
     # 
     # NOTE: Google Storage does not return lists longer than 1,000 objects.
+    # TODO: delimiter, marker, prefix, etc does not seem to have any effect on the
+    #       list of objects returned. it's possible that the request is not being
+    #       sent correctly (ie: the querystring is not recognized)
     def contents(options = { })
       res, doc = exec(:get, :path => "/#{@name}/", :params => options)
       raise_error doc unless res.instance_of? Net::HTTPOK
@@ -73,7 +76,6 @@ module GoogleStorage
         else v
         end
       end
-      puts doc
       #  doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
       @truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
       doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }

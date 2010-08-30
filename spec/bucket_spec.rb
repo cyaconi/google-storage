@@ -56,7 +56,7 @@ describe "Bucket" do
   # TODO need to finish implementation
   it "should be able to list bucket contents" do
     bucket   = Bucket.new('my-test-bucket', @authorization)
-    contents = bucket.contents(:delimiter => '/', :prefix => '/europe')
+    contents = bucket.contents(:delimiter => '/', :prefix => 'europe/')
     contents.should be_an_instance_of Array
   end
   
