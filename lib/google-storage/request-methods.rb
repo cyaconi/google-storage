@@ -37,7 +37,7 @@ module GoogleStorage
       #req.each{ |k, v| puts "#{k}:\t#{v}" }
       authorize(req)
       
-      res = Net::HTTP.new(uri.host).start{ |http| http.request(req, body) }
+      res = Net::HTTP.new(uri.host, uri.port).start{ |http| http.request(req, body) }
       doc = Nokogiri::XML(res.body) 
       
       [ res, doc ]
