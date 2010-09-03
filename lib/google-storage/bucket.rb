@@ -1,6 +1,7 @@
 module GoogleStorage
   class Bucket < RequestMethods
     attr_reader :name
+    attr_reader :authorization
     
     def initialize(name, authorization, autocreate = false, &block)
       @name          = name
@@ -43,8 +44,8 @@ module GoogleStorage
       raise_error doc unless res.instance_of? Net::HTTPOK
     end
     
-    # delete bucket
-    def delete
+    # destroy/delete bucket
+    def destroy
       res, doc = exec(:delete, :path => "/#{@name}/")
       raise_error doc unless res.instance_of? Net::HTTPNoContent
     end
@@ -76,14 +77,12 @@ module GoogleStorage
         else v
         end
       end
-      #  doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
-      @truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
+      # doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
+      # @truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
       doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
     end
     
-    # check if the last request for bucket contents returned a truncated list 
-    def truncated?
-      @truncated
+    def put(object, key, options = { })
     end
   end
 end
