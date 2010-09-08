@@ -37,7 +37,7 @@ module GoogleStorage
       
       req.body_stream = stream unless stream.nil?
       res = Net::HTTP.new(uri.host, uri.port).start{ |http| http.request(req, body) } 
-      stream.close unless stream.nil?
+      # stream.close unless stream.nil?
       doc = Nokogiri::XML(res.body) 
       
       [ res, doc ]

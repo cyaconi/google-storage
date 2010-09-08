@@ -64,9 +64,8 @@ describe "Bucket" do
   it "should be able to upload file to bucket" do
     bucket = Bucket.new('my-test-bucket', @authorization)
     path   = "fixtures/man_who_wasnt_there_ver4.jpg"
-    object = File.open(path, "r")
     key    = File.basename(path)
-    lambda{ bucket.put(object, key) }.should_not raise_error
+    lambda{ File.open(path, "r"){ |object| bucket.put(object, key) } }.should_not raise_error
     contents = bucket.contents
     contents.should be_an_instance_of Array
     content = contents.find{ |c| c[:key] =~ /^#{key}$/ }
