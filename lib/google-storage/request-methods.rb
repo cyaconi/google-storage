@@ -20,13 +20,11 @@ module GoogleStorage
     def exec(verb, options = { })
       uri    = URI.parse("http://#{HOST}/")
       body   = options.delete(:body)
+      stream = options.delete(:'body-stream')
       path   = options.delete(:path) || uri.path
       params = options.delete(:params)
-      unless params.nil? or params.empty?
-        params.stringify_keys!
-        path << "?#{params.keys.sort.map{ |k| "#{k}=#{params[k]}"}.join("&")}"
-      end
-      puts ">>>>>> #{path}"
+      params.stringify_keys! unless params.nil? or params.empty?
+      
       req = Kernel.constant("Net::HTTP::#{verb.to_s.capitalize}").new(path)
       req["content-length"] = body.nil? ? "0" : body.to_s.length
       req["content-type"]   = DEFAULT_CONTENT_TYPE
@@ -37,7 +35,9 @@ module GoogleStorage
       #req.each{ |k, v| puts "#{k}:\t#{v}" }
       authorize(req)
       
-      res = Net::HTTP.new(uri.host, uri.port).start{ |http| http.request(req, body) }
+      req.body_stream = stream unless stream.nil?
+      res = Net::HTTP.new(uri.host, uri.port).start{ |http| http.request(req, body) } 
+      stream.close unless stream.nil?
       doc = Nokogiri::XML(res.body) 
       
       [ res, doc ]

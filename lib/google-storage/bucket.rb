@@ -83,6 +83,20 @@ module GoogleStorage
     end
     
     def put(object, key, options = { })
+      options[:path] = "/#{@name}/#{key}"
+      case object
+      when File
+        options[:'body-stream']    = object
+        options[:'content-length'] = File.size(object)
+        options[:'content-type']   = MimeType.of(object.path)
+      when String
+        options[:body]           = object
+        options[:'content-type'] = MimeType.of(key)
+      else
+        # raise error?
+      end
+      res, doc = exec(:put, options)
+      raise_error doc unless res.instance_of? Net::HTTPOK
     end
   end
 end

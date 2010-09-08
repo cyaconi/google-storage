@@ -27,9 +27,11 @@ describe "Service" do
     bkt = @service.get(@bucket_name, true)
     bkt.should_not be nil
     bkt.name.should match @bucket_name
+    #@service.buckets.length.should eql 1
+    @service.buckets.length.should eql 2
+    bkt.destroy
+    #@service.buckets.length.should eql 0
     @service.buckets.length.should eql 1
-    bkt.delete
-    @service.buckets.length.should eql 0
   end
 
   it "should accept a block that allows the client to communicate with the Service" do
@@ -38,7 +40,7 @@ describe "Service" do
       buckets
       get(bucket_name)
       bkt = get(bucket_name, true)
-      bkt.delete
+      bkt.destroy
     end
     @service.should be_an_instance_of Service
   end

@@ -54,10 +54,36 @@ describe "Bucket" do
   end
   
   # TODO need to finish implementation
+  # TODO delimiter, prefix, etc does not seem to have any effect on the query
   it "should be able to list bucket contents" do
     bucket   = Bucket.new('my-test-bucket', @authorization)
     contents = bucket.contents(:delimiter => '/', :prefix => 'europe/')
     contents.should be_an_instance_of Array
+  end
+  
+  it "should be able to upload file to bucket" do
+    bucket = Bucket.new('my-test-bucket', @authorization)
+    path   = "fixtures/man_who_wasnt_there_ver4.jpg"
+    object = File.open(path, "r")
+    key    = File.basename(path)
+    lambda{ bucket.put(object, key) }.should_not raise_error
+    contents = bucket.contents
+    contents.should be_an_instance_of Array
+    content = contents.find{ |c| c[:key] =~ /^#{key}$/ }
+    content.should_not be nil
+    content[:size].should eql File.size(path)
+  end
+
+  it "should be able to put an object in a bucket using a string" do
+    bucket = Bucket.new('my-test-bucket', @authorization)
+    key    = "string-data.txt"
+    data   = "lorem ipsum dolor"
+    lambda{ bucket.put(data, key) }.should_not raise_error
+    contents = bucket.contents
+    contents.should be_an_instance_of Array
+    content = contents.find{ |c| c[:key] =~ /^#{key}$/ }
+    content.should_not be nil
+    content[:size].should eql data.length
   end
   
   protected
@@ -75,7 +101,7 @@ describe "Bucket" do
   end
   
   def attempt_remove(bucket)
-    bucket.delete
+    bucket.destroy
     bucket.exists?.should be false
   end
 end
