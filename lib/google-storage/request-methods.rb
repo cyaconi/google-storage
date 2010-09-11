@@ -21,8 +21,10 @@ module GoogleStorage
       uri    = URI.parse("http://#{HOST}/")
       body   = options.delete(:body)
       stream = options.delete(:'body-stream')
+    
       params = options.delete(:params)
-      params = params.map{ |k, v| "#{k}=#{v}" }.join("&") unless params.blank? 
+      params = params.map{ |k, v| "#{k}=#{CGI.escape(v)}" }.join("&") unless params.blank? 
+    
       path   = options.delete(:path) || uri.path
       path << "?#{params}" unless params.blank? || path =~ /\?acl$/
       
@@ -33,6 +35,7 @@ module GoogleStorage
       req["date"]           = timestamp
       req["host"]           = uri.host
       options.each{ |k, v| req[k.to_s] = v }
+
       authorize(req)
       
       req.body_stream = stream unless stream.nil?
