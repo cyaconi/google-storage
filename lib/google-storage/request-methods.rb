@@ -6,10 +6,6 @@ module GoogleStorage
     def timestamp
       Time.now.gmtime.strftime("%a, %d %b %Y %H:%M:%S GMT")
     end
-  
-    def authorize(req, authsig = "GOOG1")
-      req["authorization"] = @authorization.generate(req, authsig)
-    end
     
     def raise_error(error)
       code    = error.xpath("/Error/Code").text
@@ -18,31 +14,41 @@ module GoogleStorage
     end
     
     def exec(verb, options = { })
-      uri    = URI.parse("http://#{HOST}/")
-      body   = options.delete(:body)
-      stream = options.delete(:'body-stream')
-    
+      verb = verb.to_s.upcase
+      body = options.delete(:body)
+      path = options.delete(:path)
+      url  = URI.parse("http://#{HOST}/#{path}")
+      
+      headers = { }
+      headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
+      headers['Content-Type']   = DEFAULT_CONTENT_TYPE
+      headers['User-Agent']     = USER_AGENT
+      headers['Date']           = timestamp
+      headers['Host']           = url.host
+      options.each{ |k, v| headers[k.to_s] = v }
+      
       params = options.delete(:params)
-      params = params.map{ |k, v| "#{k}=#{CGI.escape(v)}" }.join("&") unless params.blank? 
-    
-      path   = options.delete(:path) || uri.path
-      path << "?#{params}" unless params.blank? || path =~ /\?acl$/
+      path   = url.path 
+      path << "?acl" if options.delete(:acl)
+      headers[:"authorization"] = @authorization.generate(verb, path, headers, "GOOG1")
       
-      req = Kernel.constant("Net::HTTP::#{verb.to_s.capitalize}").new(path)
-      req["content-length"] = body.nil? ? "0" : body.to_s.length
-      req["content-type"]   = DEFAULT_CONTENT_TYPE
-      req["user-agent"]     = USER_AGENT
-      req["date"]           = timestamp
-      req["host"]           = uri.host
-      options.each{ |k, v| req[k.to_s] = v }
-
-      authorize(req)
+      config = { 
+        :method  => verb,
+        :body    => body,
+        :headers => headers.stringify_keys,
+        :params  => params 
+      }
       
-      req.body_stream = stream unless stream.nil?
-      res = Net::HTTP.new(uri.host, uri.port).start{ |http| http.request(req, body) } 
-      doc = Nokogiri::XML(res.body) 
+      @hydra ||= Typhoeus::Hydra.new
+      req = Typhoeus::Request.new(url.to_s, config)
+      #req.on_complete{ |res| [ res.code, Nokogiri::XML(res.body), \
+      #  res.headers_hash, res.body ] }
+      req.on_complete{ |res| [ res.success?, Nokogiri::XML(res.body), \
+        res.headers_hash, res.body ] }
+      @hydra.queue req
+      @hydra.run                                
       
-      [ res, doc ]
+      req.handled_response
     end
   end
 end

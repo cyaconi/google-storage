@@ -14,10 +14,9 @@ module GoogleStorage
       @keys = @config[label.to_sym]
     end
     
-    # generates an authorization string for the 
-    # request object based on type.
-    def generate(req, authsig)
-      "#{authsig} #{@keys[:access_key]}:#{signature message(req)}"
+    # generates an authorization string
+    def generate(verb, path, headers, authsig)
+      "#{authsig} #{@keys[:access_key]}:#{signature message(verb, path, headers)}"
     end
     
     private
@@ -27,25 +26,23 @@ module GoogleStorage
       Base64.encode64(OpenSSL::HMAC.digest(digest, @keys[:secret_key], message)).gsub("\n", "").toutf8
     end
 
-    # construct the message to sign string based on 
-    # the contents of the request object
-    def message(req)
+    # construct the message to sign string
+    def message(verb, path, headers)
       # canonical headers
-      verb         = req.class.name.split("::").last.upcase
       content_md5  = ""
-      content_type = req["content-type"]
-      date         = req["date"]
+      content_type = headers['Content-Type']
+      date         = headers['Date']
   
       # canonical extension headers
-      ext = req.to_hash.keys.delete_if{ |k| k !~ /^x-goog-/ }.sort.map{ |k| "#{k}:#{req[k]}" }.join("\n")
+      ext = headers.keys.delete_if{ |k| k.to_s !~ /^x-goog-/ }.sort.map{ |k| "#{k}:#{headers[k]}" }.join("\n")
       ext << "\n" unless ext.empty?
   
       # canonical resource
-      path = req.path
-      path.sub!(/\?.+/, '') unless path =~ /\?acl/
-  
+      # path.sub!(/\?.+/, '') unless path =~ /\?acl/
+
       # message to sign
-      "#{verb}\n#{content_md5}\n#{content_type}\n#{date}\n#{ext}#{path}".toutf8
+      puts "#{verb.to_s.upcase}\n#{content_md5}\n#{content_type}\n#{date}\n#{ext}#{path}".gsub("\n", " | ")
+      "#{verb.to_s.upcase}\n#{content_md5}\n#{content_type}\n#{date}\n#{ext}#{path}".toutf8
     end
   end
 end

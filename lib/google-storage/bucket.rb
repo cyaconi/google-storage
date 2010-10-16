@@ -2,72 +2,70 @@ module GoogleStorage
   class Bucket < RequestMethods
     attr_reader :name
     attr_reader :authorization
+    attr :acl
     
-    def initialize(name, authorization, autocreate = false, &block)
+    def initialize(name, authorization)
       @name          = name
       @authorization = authorization
-      
-      # do a get service request - see if bucket exists
-      # if bucket DOES NOT EXIST then create it if autocreate is true
-      # if autocreate is false then do nothing???
-      create if not exists? and autocreate
-      instance_eval &block if block_given?
     end
 
-    # Check if a bucket exists
-    def exists?
-      not acl.nil?
+    def open
+      res, doc = exec(:get, :path => @name, :acl => true)
+      raise_error doc unless res #== 200
+      @acl = Acl.new(doc)
+      self
+    end
+
+    def self.open(name, authorization)
+      bucket = Bucket.new(name, authorization)
+      bucket.open
+    end
+
+    def acl= acl
+      options  = { :path => @name, :acl => true, :body => acl.to_s }
+      res, doc = exec(:put, options)
+      raise_error doc unless res #== 200
+      @acl = acl
     end
     
-    # Create a bucket, raise an error if unable to do so
+    # create a new bucket and optionally assign an acl.
+    # if an acl is specified, an exception is raised if it not one of:
+    # - Acl::PRIVATE or private
+    # - Acl::PUBLIC_READ or public-read
+    # - Acl::PUBLIC_READ_WRITE or public-read-write
+    # - Acl::AUTHENTICATED_READ or authenticated-read
+    # - Acl::BUCKET_OWNER_READ or bucket-owner-read
+    # - Acl::BUCKET_OWNER_FULL_CONTROL or bucket-owner-full-control
     def create(acl = nil)
-      options = { :path => "/#{@name}/" }
+      raise ArgumentError, "Not a valid acl" \
+        unless acl.nil? or Acl::ALLOWED_ACLS.include? acl.to_s
+      options = { :path => @name }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
       res, doc = exec(:put, options)
-      raise_error doc unless res.instance_of? Net::HTTPOK
-    end
-
-    # Get the ACLs of the bucket
-    def acl
-      res, doc = exec(:get, :path => "/#{@name}/?acl")
-      if res.instance_of? Net::HTTPOK
-        Acl.new(doc)
-      else
-        raise_error doc unless res.instance_of? Net::HTTPNotFound
-      end
-    end
-
-    # Set the ACL of the bucket
-    def acl=(acl)
-      options  = { :path => "/#{@name}/?acl", :body => acl.to_s }
-      res, doc = exec(:put, options)
-      raise_error doc unless res.instance_of? Net::HTTPOK
+      raise_error doc unless res #== 200
+      open
     end
     
-    # destroy/delete bucket
-    def destroy
-      res, doc = exec(:delete, :path => "/#{@name}/")
-      raise_error doc unless res.instance_of? Net::HTTPNoContent
+    def self.create(name, authorization, acl = nil)
+      bucket = Bucket.new(name, authorization)
+      bucket.create(acl)
     end
-      
-    # Get the list of objects in a bucket
-    #
-    # delimiter	A character or multiple characters that can be used to simplify 
-    #           a list of objects that use a directory-like naming scheme. 
-    #           Can be used in conjunction with a prefix.	
-    # marker	  The object name from which you want to start listing objects.
-    # max-keys	The maximum number of objects to return in a list object request.	
-    # prefix	  A string that can be used to limit the number of objects that are 
-    #           returned in a GET Bucket request. Can be used in conjunction with a 
-    #           delimiter.
-    # 
-    # NOTE: Google Storage does not return lists longer than 1,000 objects.
-    # TODO: delimiter, marker, prefix, etc does not seem to have any effect on the
-    #       list of objects returned. it's possible that the request is not being
-    #       sent correctly (ie: the querystring is not recognized)
-    def contents(options = { })
-      res, doc = exec(:get, :path => "/#{@name}/", :params => options)
-      raise_error doc unless res.instance_of? Net::HTTPOK
+
+    def delete
+      res, doc = exec(:delete, :path => @name)
+      raise_error doc unless res # == 204
+    end
+    
+    def self.delete(name, authorization)
+      bucket = Bucket.new(name, authorization)
+      bucket.delete
+    end
+    
+    # list the objects in a bucket
+    def objects(options = { })
+      res, doc = exec(:get, :path => @name, :params => options)
+      raise_error doc unless res #== 200
+
       normalize = lambda do |k, v| 
         case k
         when 'last_modified' then DateTime.parse(v)
@@ -77,26 +75,25 @@ module GoogleStorage
         else v
         end
       end
-      # doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
-      # @truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
+      
+      #doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
+      #doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
       doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
     end
     
-    def put(object, key, options = { })
-      options[:path] = "/#{@name}/#{key}"
-      case object
-      when File
-        options[:'body-stream']    = object
-        options[:'content-length'] = File.size(object)
-        options[:'content-type']   = MimeType.of(object.path)
-      when String
-        options[:body]           = object
-        options[:'content-type'] = MimeType.of(key)
-      else
-        # raise error?
-      end
-      res, doc = exec(:put, options)
-      raise_error doc unless res.instance_of? Net::HTTPOK
+    # returns an Object from this bucket given its path; valid keys for the 
+    # options parameter are:
+    # - if-match	
+    # - if-modified-since	
+    # - if-none-match
+    # - if-unmodified-since
+    # - range
+    #
+    # read http://code.google.com/apis/storage/docs/reference-methods.html#getobject
+    # for details.
+    def [] path, options = {}
+      obj = Object.new(self, path)
+      obj.download options
     end
   end
 end

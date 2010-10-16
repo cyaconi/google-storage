@@ -1,5 +1,4 @@
 module GoogleStorage
-  # uri to gs services api
   HOST = "commondatastorage.googleapis.com"
 
   class RequestMethodException < Exception; end
