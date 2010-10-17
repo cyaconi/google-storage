@@ -10,8 +10,7 @@ module GoogleStorage
     end
 
     def open
-      res, doc = exec(:get, :path => @name, :acl => true)
-      raise_error doc unless res #== 200
+      doc  = exec :get, :path => @name, :acl => true
       @acl = Acl.new(doc)
       self
     end
@@ -22,9 +21,7 @@ module GoogleStorage
     end
 
     def acl= acl
-      options  = { :path => @name, :acl => true, :body => acl.to_s }
-      res, doc = exec(:put, options)
-      raise_error doc unless res #== 200
+      exec :put, :path => @name, :acl => true, :body => acl.to_s
       @acl = acl
     end
     
@@ -39,10 +36,9 @@ module GoogleStorage
     def create(acl = nil)
       raise ArgumentError, "Not a valid acl" \
         unless acl.nil? or Acl::ALLOWED_ACLS.include? acl.to_s
-      options = { :path => @name }
+      options                = { :path => @name }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
-      res, doc = exec(:put, options)
-      raise_error doc unless res #== 200
+      exec :put, options
       open
     end
     
@@ -52,8 +48,7 @@ module GoogleStorage
     end
 
     def delete
-      res, doc = exec(:delete, :path => @name)
-      raise_error doc unless res # == 204
+      exec :delete, :path => @name
     end
     
     def self.delete(name, authorization)
@@ -63,9 +58,7 @@ module GoogleStorage
     
     # list the objects in a bucket
     def objects(options = { })
-      res, doc = exec(:get, :path => @name, :params => options)
-      raise_error doc unless res #== 200
-
+      doc = exec :get, :path => @name, :params => options
       normalize = lambda do |k, v| 
         case k
         when 'last_modified' then DateTime.parse(v)
@@ -75,7 +68,6 @@ module GoogleStorage
         else v
         end
       end
-      
       #doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
       #doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
       doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }

@@ -41,10 +41,15 @@ module GoogleStorage
       
       @hydra ||= Typhoeus::Hydra.new
       req = Typhoeus::Request.new(url.to_s, config)
-      #req.on_complete{ |res| [ res.code, Nokogiri::XML(res.body), \
-      #  res.headers_hash, res.body ] }
-      req.on_complete{ |res| [ res.success?, Nokogiri::XML(res.body), \
-        res.headers_hash, res.body ] }
+      req.on_complete do |res|
+        doc = Nokogiri::XML(res.body)
+        raise_error doc unless res.success?
+        if block_given?
+          yield res.headers_hash, res.body 
+        else
+          doc
+        end
+      end
       @hydra.queue req
       @hydra.run                                
       

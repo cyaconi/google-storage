@@ -41,7 +41,6 @@ module GoogleStorage
       # path.sub!(/\?.+/, '') unless path =~ /\?acl/
 
       # message to sign
-      puts "#{verb.to_s.upcase}\n#{content_md5}\n#{content_type}\n#{date}\n#{ext}#{path}".gsub("\n", " | ")
       "#{verb.to_s.upcase}\n#{content_md5}\n#{content_type}\n#{date}\n#{ext}#{path}".toutf8
     end
   end

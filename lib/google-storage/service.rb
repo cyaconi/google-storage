@@ -13,8 +13,7 @@ module GoogleStorage
     # returns a list of buckets owned as described by 
     # the Authorization used at instantiation
     def buckets
-      res, doc = exec(:get)
-      raise_error doc unless res #== 200
+      doc       = exec :get
       normalize = lambda{ |k, v| k == :creation_date ? DateTime.parse(v) : v }
       doc.xpath("//xmlns:Bucket").map{ |node| node.to_h(&normalize) }
     end
