@@ -3,7 +3,7 @@ include GoogleStorage
 
 describe "Bucket" do
   before :each do
-    @authorization = Authorization.new('test', 'fixtures/google-storage.yml')
+    @authorization = Authorization.new('development', 'fixtures/google-storage.yml')
     @bucket        = Bucket.new('jurisgalang', @authorization)
   end
   
@@ -51,7 +51,7 @@ describe "Bucket" do
     @bucket.should be_an_instance_of Bucket
     # TODO: verify that a bucket named jurisgalang-test-create exists
     
-    lambda{ @bucket.delete }.should_not raise_error
+    lambda{ @bucket.destroy }.should_not raise_error
     # TODO: verify that a bucket named jurisgalang-test-create no longer exists
   end
   
@@ -63,8 +63,8 @@ describe "Bucket" do
     acl.add(:scope => :all_authenticated_users, :permission => Acl::PERMISSION_WRITE)
     lambda{ @bucket.acl = acl }.should_not raise_error
   
-    # TODO: verify that the new permissions are in the acl
-    @bucket.delete
+    # TODO: need to verify that the new permissions are in the acl
+    @bucket.destroy
   end
   
   it "should be able to download an object" do

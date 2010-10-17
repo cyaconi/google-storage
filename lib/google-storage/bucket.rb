@@ -9,15 +9,16 @@ module GoogleStorage
       @authorization = authorization
     end
 
-    def open
+    def open(&block)
       doc  = exec :get, :path => @name, :acl => true
       @acl = Acl.new(doc)
+      instance_eval &block if block_given?
       self
     end
 
-    def self.open(name, authorization)
+    def self.open(name, authorization, &block)
       bucket = Bucket.new(name, authorization)
-      bucket.open
+      bucket.open &block
     end
 
     def acl= acl
@@ -33,27 +34,27 @@ module GoogleStorage
     # - Acl::AUTHENTICATED_READ or authenticated-read
     # - Acl::BUCKET_OWNER_READ or bucket-owner-read
     # - Acl::BUCKET_OWNER_FULL_CONTROL or bucket-owner-full-control
-    def create(acl = nil)
+    def create(acl = nil, &block)
       raise ArgumentError, "Not a valid acl" \
         unless acl.nil? or Acl::ALLOWED_ACLS.include? acl.to_s
       options                = { :path => @name }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
       exec :put, options
-      open
+      open &block
     end
     
-    def self.create(name, authorization, acl = nil)
+    def self.create(name, authorization, acl = nil, &block)
       bucket = Bucket.new(name, authorization)
-      bucket.create(acl)
+      bucket.create acl, &block
     end
 
-    def delete
+    def destroy
       exec :delete, :path => @name
     end
     
-    def self.delete(name, authorization)
+    def self.destroy(name, authorization)
       bucket = Bucket.new(name, authorization)
-      bucket.delete
+      bucket.destroy
     end
     
     # list the objects in a bucket

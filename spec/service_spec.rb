@@ -3,7 +3,7 @@ include GoogleStorage
 
 describe "Service" do
   before :each do
-    @authorization = Authorization.new('test', 'fixtures/google-storage.yml')
+    @authorization = Authorization.new('development', 'fixtures/google-storage.yml')
     @service       = Service.new(@authorization)
   end
   

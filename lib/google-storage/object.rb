@@ -7,12 +7,12 @@ module GoogleStorage
     
     def initialize(bucket, path)
       @path          = path
-      @fullpath      = "#{bucket.name}/#{path}"
+      @fullpath      = File.join(bucket.name, path)
       @bucket        = bucket
       @authorization = bucket.authorization
     end
     
-    def delete
+    def destroy
       exec :delete, :path => @fullpath
       @content = nil
       @acl     = nil
@@ -42,6 +42,10 @@ module GoogleStorage
     end
     
     def upload(content, options)
+      config = { :path => @fullpath } * options
+      config[:body] = content
+      exec(:put, config) do |headers, content|
+      end
     end
     
     def acl
