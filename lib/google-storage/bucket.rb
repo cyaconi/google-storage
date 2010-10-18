@@ -4,19 +4,19 @@ module GoogleStorage
     attr_reader :authorization
     attr :acl
     
-    def initialize(name, authorization)
+    def initialize name, authorization
       @name          = name
       @authorization = authorization
     end
 
-    def open(&block)
+    def open &block
       doc  = exec :get, :path => @name, :acl => true
       @acl = Acl.new(doc)
       instance_eval &block if block_given?
       self
     end
 
-    def self.open(name, authorization, &block)
+    def self.open name, authorization, &block
       bucket = Bucket.new(name, authorization)
       bucket.open &block
     end
@@ -34,16 +34,16 @@ module GoogleStorage
     # - Acl::AUTHENTICATED_READ or authenticated-read
     # - Acl::BUCKET_OWNER_READ or bucket-owner-read
     # - Acl::BUCKET_OWNER_FULL_CONTROL or bucket-owner-full-control
-    def create(acl = nil, &block)
+    def create acl = nil, &block
       raise ArgumentError, "Not a valid acl" \
         unless acl.nil? or Acl::ALLOWED_ACLS.include? acl.to_s
-      options                = { :path => @name }
+      options = { :path => @name }
       options[:'x-goog-acl'] = acl.to_s unless acl.nil?
       exec :put, options
       open &block
     end
     
-    def self.create(name, authorization, acl = nil, &block)
+    def self.create name, authorization, acl = nil, &block
       bucket = Bucket.new(name, authorization)
       bucket.create acl, &block
     end
@@ -52,13 +52,13 @@ module GoogleStorage
       exec :delete, :path => @name
     end
     
-    def self.destroy(name, authorization)
+    def self.destroy name, authorization
       bucket = Bucket.new(name, authorization)
       bucket.destroy
     end
     
     # list the objects in a bucket
-    def objects(options = { })
+    def objects options = { }
       doc = exec :get, :path => @name, :params => options
       normalize = lambda do |k, v| 
         case k
@@ -74,8 +74,16 @@ module GoogleStorage
       doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
     end
     
-    # returns an Object from this bucket given its path; valid keys for the 
-    # options parameter are:
+    # download an object from this bucket and returns and Object if the object
+    # was successfully downloaded. otherwise nil.
+    #
+    # if dest is specified, the content is saved into a local file. if dest 
+    # resolves to a file, and overwite is true then an IOError is raised. if
+    # dest resolves to a directory, then the content of the object is saved 
+    # to a file matching the name of the object. if dest is meant to be 
+    # directory but it does not exist then  an IOError is raised.
+    #
+    # valid keys for the options parameter are:
     # - if-match	
     # - if-modified-since	
     # - if-none-match
@@ -84,9 +92,22 @@ module GoogleStorage
     #
     # read http://code.google.com/apis/storage/docs/reference-methods.html#getobject
     # for details.
-    def [] path, options = {}
+    def download path, options = { }, dest = nil, overwrite = false
       obj = Object.new(self, path)
-      obj.download options
+      obj.get options
+      unless dest.nil?
+        raise IOError, "File `#{dest}' already exist." if File.exists? dest and \
+          File.file? dest and !overwrite
+        raise IOError, "Path `#{dest}' does not exist." unless File.exists? dest
+        dest = File.join(dest, File.basename(obj.path)) unless File.file? dest
+        File.write(dest, obj.content)
+      end
+      obj
+    rescue NotModifiedException, PreconditionFailedException
+    end
+
+    # uploads an object into this bucket
+    def upload srcpath, destpath = "/"
     end
   end
 end

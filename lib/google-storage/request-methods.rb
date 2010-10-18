@@ -26,11 +26,11 @@ module GoogleStorage
       headers['Date']           = timestamp
       headers['Host']           = url.host
       options.each{ |k, v| headers[k.to_s] = v }
-      
+
       params = options.delete(:params)
       path   = url.path 
       path << "?acl" if options.delete(:acl)
-      headers[:"authorization"] = @authorization.generate(verb, path, headers, "GOOG1")
+      headers['Authorization'] = @authorization.generate(verb, path, headers, "GOOG1")
       
       config = { 
         :method  => verb,

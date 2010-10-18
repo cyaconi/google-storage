@@ -20,12 +20,14 @@ describe "Authorization" do
   end
 
   it "should use the config file in the current working directory" do
-    path = './google-storage.yml'
-    File.write(path, YAML.dump(@hash_config))
-    config = YAML.load(File.read './google-storage.yml')
-    config.recursively!{ |h| h.symbolize_keys! }
-    compare_authorization_instance({}, config)
-    File.delete(path)
+    Dir.chdir "/tmp" do
+      path = './google-storage.yml'
+      File.write(path, YAML.dump(@hash_config))
+      config = YAML.load(File.read './google-storage.yml')
+      config.recursively!{ |h| h.symbolize_keys! }
+      compare_authorization_instance({}, config)
+      File.delete(path)
+    end
   end
   
   it "should use the file specified by path as config" do

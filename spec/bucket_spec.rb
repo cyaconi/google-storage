@@ -68,16 +68,19 @@ describe "Bucket" do
   end
   
   it "should be able to download an object" do
-    lambda{ @object = @bucket['lorem-ipsum.txt'] }.should_not raise_error
-    # TODO: verify contents of object
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt' }.should_not raise_error
+    @object.should be_an_instance_of GoogleStorage::Object
+    @object.path.should eql 'lorem-ipsum.txt'
     
-    lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error
-    @object.fullpath
-    @object.content_length
-    @object.date
-    @object.last_modified
-    # TODO: verify contents of object
-    
-    lambda{ @bucket['non-existent-file'] }.should raise_error
+    ## TODO: verify contents of object
+    #
+    #lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error
+    #@object.fullpath
+    #@object.content_length
+    #@object.date
+    #@object.last_modified
+    ## TODO: verify contents of object
+    #
+    #lambda{ @bucket['non-existent-file'] }.should raise_error
   end
 end

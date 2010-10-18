@@ -2,7 +2,7 @@ module GoogleStorage
   class Authorization
     # creates an Authorization string generator
     # using the declared keys in config.
-    def initialize(label, config = {})
+    def initialize(label, config = { })
       @config = if config.empty?
         YAML.load(File.read "google-storage.yml")
       elsif config.instance_of? String
