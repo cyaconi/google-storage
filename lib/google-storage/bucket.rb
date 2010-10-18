@@ -51,7 +51,13 @@ module GoogleStorage
     def destroy
       destroy!
       true
-    rescue ConflictException, NotFoundException
+    rescue BucketAlreadyOwnedByYouException, # 409 Conflict
+      BucketNameUnavailableException,
+      BucketNotEmptyException, 
+      OperationAbortedException, 
+      AccessDeniedException,                 # 404 Not Found
+      NoSuchBucketException, 
+      NoSuchKeyException
       false
     end
 
@@ -106,7 +112,8 @@ module GoogleStorage
         get options
         save dest, overwrite unless dest.nil?
       end
-    rescue NotModifiedException, PreconditionFailedException
+    rescue NotModifiedException, 
+      PreconditionFailedException
     end
     
     def delete path

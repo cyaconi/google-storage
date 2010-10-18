@@ -12,6 +12,16 @@ module GoogleStorage
       @authorization = bucket.authorization
       instance_eval &block if block_given?
     end
+    
+    def open options = { }
+      config = { :path => @fullpath } * options
+      exec(:head, config) { |headers, content| load_metadata headers, content }
+      self
+    end
+    
+    def self.open(bucket, path, options)
+      GoogleStorage::Object.new(bucket, path){ open options }
+    end
    
     def get options = { }
       config = { :path => @fullpath } * options
@@ -38,7 +48,9 @@ module GoogleStorage
     def destroy
       destroy! 
       true
-    rescue NotFoundException
+    rescue AccessDeniedException, # 404 Not Found
+      NoSuchBucketException, 
+      NoSuchKeyException
       false
     end
 

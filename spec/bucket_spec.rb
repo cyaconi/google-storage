@@ -100,4 +100,10 @@ describe "Bucket" do
     
     lambda{ @object.destroy! }.should_not raise_error
   end
+  
+  it "should raise error when using destroy! to delete a non-existent bucket" do
+  end
+
+  it "should raise error when using destroy to delete a non-existent bucket" do
+  end
 end
