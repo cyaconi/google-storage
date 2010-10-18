@@ -123,8 +123,6 @@ module GoogleStorage
 
     # uploads an object into this bucket
     def upload src, options = { }
-      options[:delimiter] ||= "/"
-
       path = case src
       when String
         options[:body] = src
@@ -137,11 +135,10 @@ module GoogleStorage
       else
         raise ArgumentError, "src must be either be a String or File"
       end
-      path.gsub!(/\//, options.delete(:delimiter))
-      options[:'content-type'] = MimeType.of path
-        
-      obj = Object.new(self, path)
-      obj.put options
+      path.gsub!(/\//, options.delete(:delimiter) || "/")
+
+      options[:'content-type'] ||= MimeType.of path
+      GoogleStorage::Object.new(self, path) { put options }
     rescue PreconditionFailedException
     end
   end
