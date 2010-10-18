@@ -21,7 +21,7 @@ module GoogleStorage
       
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
-      headers['Content-Type']   = DEFAULT_CONTENT_TYPE
+      headers['Content-Type']   = options[:'content-type'] || DEFAULT_CONTENT_TYPE
       headers['User-Agent']     = USER_AGENT
       headers['Date']           = timestamp
       headers['Host']           = url.host

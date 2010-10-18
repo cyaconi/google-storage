@@ -84,6 +84,14 @@ describe "Bucket" do
     File.delete "/tmp/lorem-ipsum.txt"
   end
   
+  it "should be able to upload/create and delete an object" do
+    lambda{ @object = @bucket.upload 'lorem ipsum dolor', :dest => "upload-test.txt" }.should_not raise_error
+    @object.should be_an_instance_of GoogleStorage::Object
+    @object.path.should eql 'upload-test.txt'
+    
+    lambda{ @object.destroy }.should_not raise_error
+  end
+  
   ## TODO: verify contents of object
   #
   #lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error

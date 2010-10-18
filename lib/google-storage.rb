@@ -26,5 +26,6 @@ require 'google-storage/object'
 require 'google-storage/acl'
 require 'google-storage/acl-owner'
 require 'google-storage/acl-entry'
+require 'google-storage/mime-type'
 
 require 'google-storage/nokogiri/xml-element'

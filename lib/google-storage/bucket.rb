@@ -92,8 +92,8 @@ module GoogleStorage
     #
     # read http://code.google.com/apis/storage/docs/reference-methods.html#getobject
     # for details.
-    def download path, options = { }, dest = nil, overwrite = false
-      obj = Object.new(self, path)
+    def download src, options = { }, dest = nil, overwrite = false
+      obj = Object.new(self, src)
       obj.get options
       unless dest.nil?
         raise IOError, "File `#{dest}' already exist." \
@@ -109,7 +109,7 @@ module GoogleStorage
         File.write(dest, obj.content)
       end
       obj
-    rescue NotModifiedException, PreconditionFailedException
+    rescue GoogleStorage::NotModifiedException, GoogleStorage::PreconditionFailedException
     end
     
     def delete path
@@ -118,7 +118,27 @@ module GoogleStorage
     end
 
     # uploads an object into this bucket
-    def upload srcpath, destpath = "/"
+    def upload src, options = { }
+      options[:delimiter] ||= "/"
+
+      path = case src
+      when String
+        options[:body] = src
+        digest   = OpenSSL::Digest::Digest.new('sha1')
+        basename = OpenSSL::HMAC.digest(digest, @name, src)
+        options.delete(:dest) || basename
+      when File
+        options[:body] = File.read(src.path)
+        options[:dest] || File.basename(src.path)
+      else
+        raise ArgumentError, "src must be either be a String or File"
+      end
+      path.gsub!(/\//, options.delete(:delimiter))
+      options[:'content-type'] = MimeType.of path
+        
+      obj = Object.new(self, path)
+      obj.put options
+    rescue GoogleStorage::PreconditionFailedException
     end
   end
 end
