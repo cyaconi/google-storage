@@ -71,16 +71,27 @@ describe "Bucket" do
     lambda{ @object = @bucket.download 'lorem-ipsum.txt' }.should_not raise_error
     @object.should be_an_instance_of GoogleStorage::Object
     @object.path.should eql 'lorem-ipsum.txt'
-    
-    ## TODO: verify contents of object
-    #
-    #lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error
-    #@object.fullpath
-    #@object.content_length
-    #@object.date
-    #@object.last_modified
-    ## TODO: verify contents of object
-    #
-    #lambda{ @bucket['non-existent-file'] }.should raise_error
   end
+
+  it "should be able to download an object and save it locally" do
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', { }, "/tmp", true }.should_not raise_error
+    @object.should be_an_instance_of GoogleStorage::Object
+    @object.path.should eql 'lorem-ipsum.txt'
+    File.exists?("/tmp/lorem-ipsum.txt").should eql true
+    File.size("/tmp/lorem-ipsum.txt").should eql @object.content.length
+    
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', { }, "/tmp" }.should raise_error
+    File.delete "/tmp/lorem-ipsum.txt"
+  end
+  
+  ## TODO: verify contents of object
+  #
+  #lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error
+  #@object.fullpath
+  #@object.content_length
+  #@object.date
+  #@object.last_modified
+  ## TODO: verify contents of object
+  #
+  #lambda{ @bucket['non-existent-file'] }.should raise_error
 end

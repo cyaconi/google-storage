@@ -96,14 +96,25 @@ module GoogleStorage
       obj = Object.new(self, path)
       obj.get options
       unless dest.nil?
-        raise IOError, "File `#{dest}' already exist." if File.exists? dest and \
-          File.file? dest and !overwrite
-        raise IOError, "Path `#{dest}' does not exist." unless File.exists? dest
-        dest = File.join(dest, File.basename(obj.path)) unless File.file? dest
+        raise IOError, "File `#{dest}' already exist." \
+          if File.exists?(dest) && File.file?(dest) && !overwrite
+        raise IOError, "Path `#{dest}' does not exist." \
+          unless File.exists? dest
+        
+        dest = File.join(dest, File.basename(obj.path)) \
+          unless File.file? dest
+        raise IOError, "File `#{dest}' already exist." \
+          if File.exists?(dest) && !overwrite
+            
         File.write(dest, obj.content)
       end
       obj
     rescue NotModifiedException, PreconditionFailedException
+    end
+    
+    def delete path
+      obj = Object.new(self, path)
+      obj.destroy
     end
 
     # uploads an object into this bucket

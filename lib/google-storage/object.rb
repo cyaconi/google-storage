@@ -3,6 +3,7 @@ module GoogleStorage
     attr_reader :path
     attr_reader :fullpath
     attr_reader :content
+    attr :acl
     
     def initialize bucket, path
       @path          = path
@@ -10,7 +11,7 @@ module GoogleStorage
       @bucket        = bucket
       @authorization = bucket.authorization
     end
-    
+   
     def get options = { }
       config = { :path => @fullpath } * options
       exec(:get, config) do |headers, content|
@@ -32,6 +33,25 @@ module GoogleStorage
       end
       yield @path, @content if block_given?
       self
+    end
+
+    def destroy
+      exec :delete, :path => @fullpath
+      @content = nil
+      @acl     = nil
+    end
+
+    def acl
+      unless @acl
+        doc = exec :get, :path => @fullpath, :acl => true
+        @acl = Acl.new(doc)
+      end
+      @acl
+    end
+    
+    def acl= acl
+      exec :put, :path => @fullpath, :acl => true, :body => acl.to_s
+      @acl = acl
     end
   end
 end
