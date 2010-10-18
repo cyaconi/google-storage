@@ -49,6 +49,13 @@ module GoogleStorage
     end
 
     def destroy
+      destroy!
+      true
+    rescue ConflictException, NotFoundException
+      false
+    end
+
+    def destroy!
       exec :delete, :path => @name
     end
     
@@ -92,24 +99,14 @@ module GoogleStorage
     #
     # read http://code.google.com/apis/storage/docs/reference-methods.html#getobject
     # for details.
-    def download src, options = { }, dest = nil, overwrite = false
-      obj = Object.new(self, src)
-      obj.get options
-      unless dest.nil?
-        raise IOError, "File `#{dest}' already exist." \
-          if File.exists?(dest) && File.file?(dest) && !overwrite
-        raise IOError, "Path `#{dest}' does not exist." \
-          unless File.exists? dest
-        
-        dest = File.join(dest, File.basename(obj.path)) \
-          unless File.file? dest
-        raise IOError, "File `#{dest}' already exist." \
-          if File.exists?(dest) && !overwrite
-            
-        File.write(dest, obj.content)
+    def download src, options = { }
+      dest      = options.delete(:dest)
+      overwrite = options.delete(:overwrite)
+      GoogleStorage::Object.new(self, src) do
+        get options
+        save dest, overwrite unless dest.nil?
       end
-      obj
-    rescue GoogleStorage::NotModifiedException, GoogleStorage::PreconditionFailedException
+    rescue NotModifiedException, PreconditionFailedException
     end
     
     def delete path
@@ -138,7 +135,7 @@ module GoogleStorage
         
       obj = Object.new(self, path)
       obj.put options
-    rescue GoogleStorage::PreconditionFailedException
+    rescue PreconditionFailedException
     end
   end
 end

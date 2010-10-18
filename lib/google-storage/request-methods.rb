@@ -10,6 +10,7 @@ module GoogleStorage
     def raise_error(error)
       code    = error.xpath("/Error/Code").text
       message = error.xpath("/Error/Message").text
+      puts "raising: #{code}Exception"
       raise GoogleStorage::RequestMethodException(code), "#{message}" 
     end
     

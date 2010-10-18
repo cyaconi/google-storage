@@ -51,7 +51,7 @@ describe "Bucket" do
     @bucket.should be_an_instance_of Bucket
     # TODO: verify that a bucket named jurisgalang-test-create exists
     
-    lambda{ @bucket.destroy }.should_not raise_error
+    lambda{ @bucket.destroy! }.should_not raise_error
     # TODO: verify that a bucket named jurisgalang-test-create no longer exists
   end
   
@@ -64,7 +64,7 @@ describe "Bucket" do
     lambda{ @bucket.acl = acl }.should_not raise_error
   
     # TODO: need to verify that the new permissions are in the acl
-    @bucket.destroy
+    lambda{ @bucket.destroy! }.should_not raise_error
   end
   
   it "should be able to download an object" do
@@ -74,14 +74,23 @@ describe "Bucket" do
   end
 
   it "should be able to download an object and save it locally" do
-    lambda{ @object = @bucket.download 'lorem-ipsum.txt', { }, "/tmp", true }.should_not raise_error
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp", :overwrite => true }.should_not raise_error
     @object.should be_an_instance_of GoogleStorage::Object
     @object.path.should eql 'lorem-ipsum.txt'
     File.exists?("/tmp/lorem-ipsum.txt").should eql true
     File.size("/tmp/lorem-ipsum.txt").should eql @object.content.length
     
-    lambda{ @object = @bucket.download 'lorem-ipsum.txt', { }, "/tmp" }.should raise_error
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp" }.should raise_error
     File.delete "/tmp/lorem-ipsum.txt"
+  end
+  
+  it "should be able to download an object and save it locally using a different filename" do
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp/file.txt", :overwrite => true }.should_not raise_error
+    File.exists?("/tmp/file.txt").should eql true
+    File.size("/tmp/file.txt").should eql @object.content.length
+    
+    lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp/file.txt" }.should raise_error
+    File.delete "/tmp/file.txt"
   end
   
   it "should be able to upload/create and delete an object" do
@@ -89,17 +98,6 @@ describe "Bucket" do
     @object.should be_an_instance_of GoogleStorage::Object
     @object.path.should eql 'upload-test.txt'
     
-    lambda{ @object.destroy }.should_not raise_error
+    lambda{ @object.destroy! }.should_not raise_error
   end
-  
-  ## TODO: verify contents of object
-  #
-  #lambda{ @object = @bucket['lipskryx.jpg'] }.should_not raise_error
-  #@object.fullpath
-  #@object.content_length
-  #@object.date
-  #@object.last_modified
-  ## TODO: verify contents of object
-  #
-  #lambda{ @bucket['non-existent-file'] }.should raise_error
 end
