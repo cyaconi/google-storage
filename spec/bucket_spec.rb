@@ -6,34 +6,44 @@ describe "Bucket" do
     @authorization = Authorization.new('development', 'fixtures/google-storage.yml')
     @bucket        = Bucket.new('jurisgalang', @authorization)
   end
+
+  it "should return an instance of object and its metadata attributes populated" do
+    lambda{ @object = @bucket['lorem-ipsum.txt'] }.should_not raise_error    
+    @object.should be_an_instance_of GoogleStorage::Object
+    %w{ x_frame_options etag expires content_type content_length
+        server date cache_control x_content_type_options 
+        x_xss_protection last_modified pragma }.each do |attr|
+      @object.should respond_to :"#{attr}"
+    end
+  end
   
   it "should create an instance of Bucket" do
     @authorization.should be_an_instance_of Authorization
     @bucket.should be_an_instance_of Bucket
   end
-
+  
   it "should list all of the objects that are in the bucket" do
     lambda{ @bucket.objects }.should_not raise_error
     bucket = @bucket.objects
     bucket.should be_an_instance_of Array
     bucket.length.should eql 9
   end
-
+  
   it "should enforce parameters when listing the contents of a bucket" do
     lambda{ @bucket.objects }.should_not raise_error
     
     africa = @bucket.objects(:prefix => "africa")
     africa.should be_an_instance_of Array
     africa.length.should eql 2
-
+  
     france = @bucket.objects(:prefix => "europe/france")
     france.should be_an_instance_of Array
     france.length.should eql 2
-
+  
     germany = @bucket.objects(:prefix => "europe/germany")
     germany.should be_an_instance_of Array
     germany.length.should eql 2
-
+  
     sweden = @bucket.objects(:prefix => "europe/sweden")
     sweden.should be_an_instance_of Array
     sweden.length.should eql 1
@@ -72,7 +82,7 @@ describe "Bucket" do
     @object.should be_an_instance_of GoogleStorage::Object
     @object.path.should eql 'lorem-ipsum.txt'
   end
-
+  
   it "should be able to download an object and save it locally" do
     lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp", :overwrite => true }.should_not raise_error
     @object.should be_an_instance_of GoogleStorage::Object
@@ -103,7 +113,7 @@ describe "Bucket" do
   
   it "should raise error when using destroy! to delete a non-existent bucket" do
   end
-
+  
   it "should raise error when using destroy to delete a non-existent bucket" do
   end
 end

@@ -35,14 +35,15 @@ module GoogleStorage
       
       config = { 
         :method  => verb,
-        :body    => body,
-        :headers => headers.stringify_keys,
-        :params  => params 
+        :headers => headers.stringify_keys
       }
+      config[:params] = params unless params.nil? or params.empty?
+      config[:body]   = body unless body.nil? or body.empty?
       
       @hydra ||= Typhoeus::Hydra.new
       req = Typhoeus::Request.new(url.to_s, config)
       req.on_complete do |res|
+        puts ">> #{res.body}" if verb == :head
         doc = Nokogiri::XML(res.body)
         raise_error doc unless res.success?
         if block_given?

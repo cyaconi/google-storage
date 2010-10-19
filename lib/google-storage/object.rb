@@ -13,16 +13,24 @@ module GoogleStorage
       instance_eval &block if block_given?
     end
     
+    # retrieves the object's metadata 
+    # raises NoSuchKeyException if the object does not exist
+    #
+    # HACK: it should actually use:
+    #
+    #   exec(:head, config) { |headers, content| 
+    #     load_metadata headers, content 
+    #   }
+    # 
+    # but HEAD request is slow somehow. need to investigate how typhoues
+    # does a HEAD request.
     def open options = { }
       config = { :path => @fullpath } * options
-      exec(:head, config) { |headers, content| load_metadata headers, content }
+      config[:range] = "bytes=0"
+      exec(:get, config) { |headers, content| load_metadata headers, content }
       self
     end
     
-    def self.open(bucket, path, options)
-      GoogleStorage::Object.new(bucket, path){ open options }
-    end
-   
     def get options = { }
       config = { :path => @fullpath } * options
       exec(:get, config) { |headers, content| load_metadata headers, content }
@@ -80,7 +88,6 @@ module GoogleStorage
       this = class << self; self; end
       headers.each do |k, v|
         next if k =~ / / 
-        #puts "- #{k}: #{v}"
         normalize = lambda do |k, v| 
           case k
           when /^(expires|last_modified|date)$/: DateTime.parse(v)
@@ -88,8 +95,10 @@ module GoogleStorage
           else v
           end
         end
-        this.class_eval{ attr_reader k.to_sym }
-        instance_variable_set :"@#{k}", normalize[k, v]
+        varname = :"@#{k}"
+        this.class_eval{ attr_reader k.to_sym } \
+          unless instance_variable_defined? varname
+        instance_variable_set varname, normalize[k, v]
       end
     end
   end

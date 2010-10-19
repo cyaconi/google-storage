@@ -141,5 +141,11 @@ module GoogleStorage
       GoogleStorage::Object.new(self, path) { put options }
     rescue PreconditionFailedException
     end
+    
+    def [] path, options = { }
+      GoogleStorage::Object.new(self, path) { open options }
+    rescue 
+      nil
+    end
   end
 end
