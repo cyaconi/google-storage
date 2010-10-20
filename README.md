@@ -7,7 +7,8 @@ Usage
 See this [gist](http://gist.github.com/635773.js?file=google-storage-gem-examples.rb) 
 for examples on how to use the google-storage gem.
   
-### TODO
+TODO
+----
 * Example for creating a new bucket
 * Example for setting/getting bucket ACL
 * Example for setting/getting object ACL
