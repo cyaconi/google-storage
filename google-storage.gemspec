@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
-  s.date = %q{2010-10-19}
-  s.description = %q{TODO: Ruby bindings for the GoogleStorage API}
+  s.date = %q{2010-10-20}
+  s.description = %q{Ruby bindings for the GoogleStorage API}
   s.email = %q{jurisgalang@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -25,12 +25,9 @@ Gem::Specification.new do |s|
      "README.md",
      "Rakefile",
      "VERSION",
-     "adhoc-tests/context-switch.rb",
-     "adhoc-tests/list-buckets.rb",
-     "adhoc-tests/meta.rb",
-     "adhoc-tests/typhoeus.rb",
      "fixtures/google-storage.yml",
      "fixtures/test-acl.xml",
+     "google-storage.gemspec",
      "lib/google-storage.rb",
      "lib/google-storage/acl-entry.rb",
      "lib/google-storage/acl-owner.rb",

@@ -2,21 +2,22 @@
 # set the appropriate values in this configuration file if you wish to run the tests
 # ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
 
-id: 00b4903a9731eaf427785677addb8149a8758f95696c05323a928b8b6c531d5e # google storage id 
-email: jurisgalang@gmail.com                                         # email address, eg: 
+id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351 # google storage id     
+email: jurisgalang@gmail.com                                         # email address, eg:   
 group-email: gs-discussion@googlegroups.com                          # forum/group email address
 apps-domain: jurisgalang@gmail.com                                   # google apps email address
 
 # google storage access_key/secret_key section
 # define as many pairs as needed
 development:                                                         # key-pair label
-  access_key: GOOGLT3YRF3BP2RYPZO3                                   # google storage access key
-  secret_key: TiVkPQ0h+eUnkxNeXCzmPfjIJKM5ZaODNEYp7uz6               # google storage secret key, eg: 
+  access_key: GOOGTBR1091493294JAG
+  secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7               # google storage secret key, eg: 
     
 stage:                                                               # key-pair label
-  access_key: GOOGRE4XCRUJ6B2SNVEB                                   # google storage access key
-  secret_key: HwT04LD2UcPyvYDcuH5tOPgimlKIJz2rx1XRnmqb               # google storage secret key, eg: 
-
+  access_key: GOOGNBAS5DFA9FF9234C                                   # google storage access key
+  secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw               # google storage secret key, eg: 
+              
 production:                                                          # key-pair label
-  access_key: GOOGVTMN2VEFMHT2XHED                                   # google storage access key
-  secret_key: AJYdwu7BuKiItz9yCAe75UzwAG01uPNE5jFPiUNH               # google storage secret key, eg: 
+  access_key: GOOGNBSBNLA9234ZV94D                                   # google storage access key
+  secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww               # google storage secret key, eg: 
+              
