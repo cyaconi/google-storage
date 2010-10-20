@@ -4,9 +4,9 @@ This gem implements Ruby bindings for the GoogleStorage API.
 
 Usage
 -----
-See this [gist](http://gist.github.com/635773) for examples on how to use 
+See this [gist](https://gist.github.com/40c5836f7c849d08551f) for examples on how to use 
 this gem.
-  
+
 TODO
 ----
 * Example for creating a new bucket
