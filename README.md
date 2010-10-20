@@ -1,44 +1,20 @@
 google-storage
 ==============
-This is a Ruby binding for the GoogleStorage API.
+Ruby bindings for the GoogleStorage API.
 
 Usage
 -----
-Briefly:
+Simple examples:
 
-    # create an authorization object to use for services
-    authorization = Authorization.new("production")
-    service       = Service.new(authorization)
-    
-    # list buckets
-    service.buckets.each do |entry|
-      puts "#{entry[:name]} #{entry[:creation_date]}"
-    end
-
-    # get a reference to a bucket
-    bucket = service["my-bucket"] 
-
-    # list contents of bucket
-    bucket.objects.each do |entry|
-      puts "#{entry[:key]} #{entry[:last_modified]} #{entry[:size]}"
-    end
-    
-    # download an object from the bucket
-    bucket.download "lorem-ipsum.txt"
-
-    # upload an object into the bucket
-    bucket.upload File.new("lorem-ipsum.txt")
-
-    # upload an object into the bucket in a specific location
-    bucket.upload File.new("photo.jpg"), :dest => "private/folder/photo.jpg" 
-
-    # delete an object
-    bucket.delete "private/folder/photo.jpg" 
-    
+<script src="http://gist.github.com/635773.js?file=google-storage-gem-examples.rb">
+</script>    
+  
 ### TODO
 * Example for creating a new bucket
 * Example for setting/getting bucket ACL
 * Example for setting/getting object ACL
+* Section on how to setup a GS account for development or running the 
+  project's tests.
 
 Note on Patches/Pull Requests
 ----------------------------- 
