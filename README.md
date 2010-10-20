@@ -59,6 +59,9 @@ TODO
 * Examples for alternative ways of instantiating GoogleStorage::Authorization
 * Section on how to setup a GS account for development or running the 
   project's tests.
+* Example for copying an object from one bucket into another 
+* Style examples when using the GoogleStorage::Bucket class
+* Style examples when using the GoogleStorage::Object class
 
 Note on Patches/Pull Requests
 ----------------------------- 
