@@ -22,7 +22,7 @@ module GoogleStorage
       
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
-      headers['Content-Type']   = options[:'content-type'] || DEFAULT_CONTENT_TYPE
+      headers['Content-Type']   = options.delete(:'content-type') || DEFAULT_CONTENT_TYPE
       headers['User-Agent']     = USER_AGENT
       headers['Date']           = timestamp
       headers['Host']           = url.host
@@ -39,7 +39,7 @@ module GoogleStorage
       }
       config[:params] = params unless params.nil? or params.empty?
       config[:body]   = body unless body.nil? or body.empty?
-      
+  
       @hydra ||= Typhoeus::Hydra.new
       req = Typhoeus::Request.new(url.to_s, config)
       req.on_complete do |res|
