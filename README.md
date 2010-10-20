@@ -4,14 +4,59 @@ This gem implements Ruby bindings for the GoogleStorage API.
 
 Usage
 -----
-See this [gist](http://gist.github.com/635773) for examples on how to use 
-this gem.
+The basics:
 
+    # create an authorization object to use for services
+    authorization = Authorization.new("production")
+    service       = Service.new(authorization)
+
+    # list buckets
+    service.buckets.each do |entry|
+      puts "#{entry[:name]} #{entry[:creation_date]}"
+    end
+
+    # get a reference to a bucket
+    bucket = service["my-bucket"] 
+
+    # list contents of bucket
+    bucket.objects.each do |entry|
+      puts "#{entry[:key]} #{entry[:last_modified]} #{entry[:size]}"
+    end
+    
+    # get a reference to an object
+    object = bucket["lorem-ipsum.txt"]
+    
+    # set a object's acl
+    object.acl = Acl.new(File.read "/path/to/acl.xml")
+
+    # get an object's acl
+    acl = object.acl
+
+    # download an object from the bucket
+    bucket.download "lorem-ipsum.txt"
+    
+    # upload an object into the bucket
+    bucket.upload File.new("lorem-ipsum.txt")
+
+    # upload an object into the bucket in a specific location
+    bucket.upload File.new("photo.jpg"), :dest => "private/folder/photo.jpg" 
+
+    # delete an object
+    bucket.delete "private/folder/photo.jpg"
+
+    # create a bucket
+    bucket = Bucket::create["my-other-bucket"]
+
+    # set a bucket's acl
+    bucket.acl = Acl.new(File.read "/path/to/acl.xml")
+
+    # get a bucket's acl
+    acl = bucket.acl
+    
 TODO
 ----
-* Example for creating a new bucket
-* Example for setting/getting bucket ACL
-* Example for setting/getting object ACL
+* Examples for using the GoogleStorage::Acl
+* Examples for alternative ways of instantiating GoogleStorage::Authorization
 * Section on how to setup a GS account for development or running the 
   project's tests.
 
