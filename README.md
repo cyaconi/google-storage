@@ -1,13 +1,11 @@
 google-storage
 ==============
-Ruby bindings for the GoogleStorage API.
+This gem implements Ruby bindings for the GoogleStorage API.
 
 Usage
 -----
-Simple examples:
-
-<script src="http://gist.github.com/635773.js?file=google-storage-gem-examples.rb">
-</script>    
+See this [gist](http://gist.github.com/635773.js?file=google-storage-gem-examples.rb) 
+for examples on how to use the google-storage gem.
   
 ### TODO
 * Example for creating a new bucket
