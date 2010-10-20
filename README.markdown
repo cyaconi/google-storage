@@ -44,6 +44,14 @@ The basics:
     # delete an object
     bucket.delete "private/folder/photo.jpg"
 
+    # delete an object (alternative method)
+    object = bucket["private/folder/photo.jpg"]
+    object.destroy
+    
+    # delete an object but raise an error if it fails
+    object = bucket["private/folder/photo.jpg"]
+    object.destroy!
+
     # create a bucket
     bucket = Bucket::create["my-other-bucket"]
 
@@ -53,6 +61,12 @@ The basics:
     # get a bucket's acl
     acl = bucket.acl
     
+    # delete a bucket
+    bucket.destroy
+
+    # delete a bucket but raise an error if it fails
+    bucket.destroy!
+
 TODO
 ----
 * Examples for using the GoogleStorage::Acl
