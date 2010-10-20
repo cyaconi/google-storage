@@ -14,6 +14,7 @@ describe "Bucket" do
         server date cache_control x_content_type_options 
         x_xss_protection last_modified pragma }.each do |attr|
       @object.should respond_to :"#{attr}"
+      #@object.content.should be nil
     end
   end
   

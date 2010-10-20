@@ -26,7 +26,7 @@ module GoogleStorage
     # does a HEAD request.
     def open options = { }
       config = { :path => @fullpath } * options
-      config[:range] = "bytes=0"
+      config[:range] = "bytes=0-0"
       exec(:get, config) { |headers, content| load_metadata headers, content }
       self
     end
