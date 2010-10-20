@@ -4,8 +4,8 @@ This gem implements Ruby bindings for the GoogleStorage API.
 
 Usage
 -----
-See this [gist](http://gist.github.com/635773.js?file=google-storage-gem-examples.rb) 
-for examples on how to use the google-storage gem.
+See this [gist](http://gist.github.com/635773) for examples on how to use 
+this gem.
   
 TODO
 ----
