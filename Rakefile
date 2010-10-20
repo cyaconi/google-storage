@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "google-storage"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Ruby bindings for the GoogleStorage API}
+    gem.description = %Q{Ruby bindings for the GoogleStorage API}
     gem.email = "jurisgalang@gmail.com"
     gem.homepage = "http://github.com/jurisgalang/google-storage"
     gem.authors = ["Juris Galang"]

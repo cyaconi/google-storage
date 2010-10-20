@@ -2,21 +2,21 @@
 # set the appropriate values in this configuration file if you wish to run the tests
 # ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
 
-id: abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789 # google storage id 
-email: kryx@example.com                                              # email address, eg: 
+id: 00b4903a9731eaf427785677addb8149a8758f95696c05323a928b8b6c531d5e # google storage id 
+email: jurisgalang@gmail.com                                         # email address, eg: 
 group-email: gs-discussion@googlegroups.com                          # forum/group email address
-apps-domain: admin@example.com                                       # google apps email address
+apps-domain: jurisgalang@gmail.com                                   # google apps email address
 
 # google storage access_key/secret_key section
 # define as many pairs as needed
 development:                                                         # key-pair label
-  access_key: GOOGXX6JAG2JG3JGJGX6                                   # google storage access key
-  secret_key: a0123BoKey1gus869ThiEsYEsySis23yO                      # google storage secret key, eg: 
+  access_key: GOOGLT3YRF3BP2RYPZO3                                   # google storage access key
+  secret_key: TiVkPQ0h+eUnkxNeXCzmPfjIJKM5ZaODNEYp7uz6               # google storage secret key, eg: 
     
 stage:                                                               # key-pair label
-  access_key: GOOGXX6JAG2JG3JURIS5                                   # google storage access key
-  secret_key: ThiSisa0123Bogus869Key123yEsYEsyO                      # google storage secret key, eg: 
+  access_key: GOOGRE4XCRUJ6B2SNVEB                                   # google storage access key
+  secret_key: HwT04LD2UcPyvYDcuH5tOPgimlKIJz2rx1XRnmqb               # google storage secret key, eg: 
 
 production:                                                          # key-pair label
-  access_key: GOOGXX6JAG2JG3KRYXX5                                   # google storage access key
-  secret_key: 23Bogus869KThiSisa01ey123yOyEsYEs                      # google storage secret key, eg: 
+  access_key: GOOGVTMN2VEFMHT2XHED                                   # google storage access key
+  secret_key: AJYdwu7BuKiItz9yCAe75UzwAG01uPNE5jFPiUNH               # google storage secret key, eg: 
