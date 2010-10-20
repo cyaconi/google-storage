@@ -71,6 +71,35 @@ The basics:
     # delete a bucket but raise an error if it fails
     bucket.destroy!
 
+Configuration 
+-------------
+The `GoogleStorage::Authorization` class by default expects to find a file 
+named `google-storage.yml` in the current directory when it is instantiated.
+
+Here's what the file's contents should look like:
+
+    id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351 # google storage id     
+    email: user@example.com                                              # email address, eg:   
+    group-email: gs-discussion@googlegroups.com                          # forum/group email address
+    apps-domain: user@example.com                                        # google apps email address
+
+    # google storage access_key/secret_key section
+    # define as many pairs as needed
+    development:                                                         # key-pair label
+      access_key: GOOGTBR1091493294JAG
+      secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7               # google storage secret key, eg: 
+    
+    stage:                                                               # key-pair label
+      access_key: GOOGNBAS5DFA9FF9234C                                   # google storage access key
+      secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw               # google storage secret key, eg: 
+              
+    production:                                                          # key-pair label
+      access_key: GOOGNBSBNLA9234ZV94D                                   # google storage access key
+      secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww               # google storage secret key, eg: 
+
+For more information related to authorization requirements to Google Storage
+see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
+
 TODO
 ----
 * Examples for using the GoogleStorage::Acl

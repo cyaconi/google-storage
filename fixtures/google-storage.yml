@@ -20,4 +20,3 @@ stage:                                                               # key-pair 
 production:                                                          # key-pair label
   access_key: GOOGNBSBNLA9234ZV94D                                   # google storage access key
   secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww               # google storage secret key, eg: 
-              
