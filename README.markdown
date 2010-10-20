@@ -6,6 +6,10 @@ Usage
 -----
 The basics:
 
+    # use the gem
+    require 'google-storage'
+    include GoogleStorage
+    
     # create an authorization object to use for services
     authorization = Authorization.new("production")
     service       = Service.new(authorization)
