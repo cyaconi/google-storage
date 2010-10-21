@@ -6,15 +6,12 @@ storage infrastructure. You can use Google Storage to store all sizes of files.
 Installation
 ------------
 
-    {% highlight bash %}
     gem install google-storage
-    {% endhighlight %}
 
 Usage
 -----    
 The basics:
 
-    {% highlight ruby %}
     # use the gem
     require 'google-storage'
     include GoogleStorage
@@ -79,14 +76,12 @@ The basics:
 
     # delete a bucket but raise an error if it fails
     bucket.destroy!
-    {% endhighlight %}
 
 Configuration 
 -------------
 The `GoogleStorage::Authorization` class by default expects to find a file 
 named `google-storage.yml` in the current directory when it is instantiated.
 
-    {% highlight yaml %}
     # google storage id     
     id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
     
@@ -113,7 +108,6 @@ named `google-storage.yml` in the current directory when it is instantiated.
     production:                                                          
       access_key: GOOGNBSBNLA9234ZV94D                                   
       secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
-    {% endhighlight %}
 
 For more information related to authorization requirements to Google Storage
 see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
@@ -134,9 +128,7 @@ You can download this project in either
 You can also clone the project with [Git](http://git-scm.com)
 by running: 
 
-    {% highlight bash %}
     git clone git://github.com/jurisgalang/google-storage
-    {% endhighlight %}
 
 Note on Patches/Pull Requests
 -----------------------------
