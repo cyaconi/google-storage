@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>jurisgalang/google-storage @ GitHub</title>
+	<style type="text/css">
+		body {
+  		margin-top: 1.0em;
+  		background-color: #ffffff;
+		  font-family: "Helvetica,Arial,FreeSans";
+  		color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+		h1 { font-size: 3.8em; color: #000000; margin-bottom: 3px; }
+		h1 .small { font-size: 0.4em; }
+		h1 a { text-decoration: none }
+		h2 { font-size: 1.5em; color: #000000; }
+    h3 { text-align: center; color: #000000; }
+    a { color: #000000; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+		pre { border: 1px solid gainsboro; border-radius: 8px; padding-top: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	</style>
+  <link rel="stylesheet" href="css/pygments.css" type="text/css" media="screen, projection" />
+</head>
+<body>
+  <a href="http://github.com/jurisgalang/google-storage"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  <div id="container">
+    <div class="download">
+      <a href="http://github.com/jurisgalang/google-storage/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/jurisgalang/google-storage/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+
+    <h1><a href="http://github.com/jurisgalang/google-storage">google-storage</a></h1>
+
+    <p>This gem implements Ruby bindings for the GoogleStorage API.</p>
+
+<p><a href='http://code.google.com/apis/storage/'>Google Storage</a> lets you store, share, and manage your data on Google&#8217;s storage infrastructure. You can use Google Storage to store all sizes of files.</p>
+
+<h2 id='installation'>Installation</h2>
+<div class='highlight'><pre><code class='bash'>    gem install google-storage
+    
+</code></pre>
+</div>
+<h2 id='usage'>Usage</h2>
+
+<p>The basics:</p>
+<div class='highlight'><pre><code class='ruby'>    <span class='c1'># use the gem</span>
+    <span class='nb'>require</span> <span class='s1'>&#39;google-storage&#39;</span>
+    <span class='kp'>include</span> <span class='no'>GoogleStorage</span>
+    
+    <span class='c1'># create an authorization object to use for services</span>
+    <span class='n'>authorization</span> <span class='o'>=</span> <span class='no'>Authorization</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='s2'>&quot;production&quot;</span><span class='p'>)</span>
+    <span class='n'>service</span>       <span class='o'>=</span> <span class='no'>Service</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='n'>authorization</span><span class='p'>)</span>
+
+    <span class='c1'># list buckets</span>
+    <span class='n'>service</span><span class='o'>.</span><span class='n'>buckets</span><span class='o'>.</span><span class='n'>each</span> <span class='k'>do</span> <span class='o'>|</span><span class='n'>entry</span><span class='o'>|</span>
+      <span class='nb'>puts</span> <span class='s2'>&quot;</span><span class='si'>#{</span><span class='n'>entry</span><span class='o'>[</span><span class='ss'>:name</span><span class='o'>]</span><span class='si'>}</span><span class='s2'> </span><span class='si'>#{</span><span class='n'>entry</span><span class='o'>[</span><span class='ss'>:creation_date</span><span class='o'>]</span><span class='si'>}</span><span class='s2'>&quot;</span>
+    <span class='k'>end</span>
+
+    <span class='c1'># get a reference to a bucket</span>
+    <span class='n'>bucket</span> <span class='o'>=</span> <span class='n'>service</span><span class='o'>[</span><span class='s2'>&quot;my-bucket&quot;</span><span class='o'>]</span> 
+
+    <span class='c1'># list contents of bucket</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>objects</span><span class='o'>.</span><span class='n'>each</span> <span class='k'>do</span> <span class='o'>|</span><span class='n'>entry</span><span class='o'>|</span>
+      <span class='nb'>puts</span> <span class='s2'>&quot;</span><span class='si'>#{</span><span class='n'>entry</span><span class='o'>[</span><span class='ss'>:key</span><span class='o'>]</span><span class='si'>}</span><span class='s2'> </span><span class='si'>#{</span><span class='n'>entry</span><span class='o'>[</span><span class='ss'>:last_modified</span><span class='o'>]</span><span class='si'>}</span><span class='s2'> </span><span class='si'>#{</span><span class='n'>entry</span><span class='o'>[</span><span class='ss'>:size</span><span class='o'>]</span><span class='si'>}</span><span class='s2'>&quot;</span>
+    <span class='k'>end</span>
+    
+    <span class='c1'># get a reference to an object</span>
+    <span class='n'>object</span> <span class='o'>=</span> <span class='n'>bucket</span><span class='o'>[</span><span class='s2'>&quot;lorem-ipsum.txt&quot;</span><span class='o'>]</span>
+    
+    <span class='c1'># set a object&#39;s acl</span>
+    <span class='n'>object</span><span class='o'>.</span><span class='n'>acl</span> <span class='o'>=</span> <span class='no'>Acl</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='no'>File</span><span class='o'>.</span><span class='n'>read</span> <span class='s2'>&quot;/path/to/acl.xml&quot;</span><span class='p'>)</span>
+
+    <span class='c1'># get an object&#39;s acl</span>
+    <span class='n'>acl</span> <span class='o'>=</span> <span class='n'>object</span><span class='o'>.</span><span class='n'>acl</span>
+
+    <span class='c1'># download an object from the bucket</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>download</span> <span class='s2'>&quot;lorem-ipsum.txt&quot;</span>
+    
+    <span class='c1'># upload an object into the bucket</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>upload</span> <span class='no'>File</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='s2'>&quot;lorem-ipsum.txt&quot;</span><span class='p'>)</span>
+
+    <span class='c1'># upload an object into the bucket in a specific location</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>upload</span> <span class='no'>File</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='s2'>&quot;photo.jpg&quot;</span><span class='p'>),</span> <span class='ss'>:dest</span> <span class='o'>=&gt;</span> <span class='s2'>&quot;private/folder/photo.jpg&quot;</span> 
+
+    <span class='c1'># delete an object</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>delete</span> <span class='s2'>&quot;private/folder/photo.jpg&quot;</span>
+
+    <span class='c1'># delete an object (alternative method)</span>
+    <span class='n'>object</span> <span class='o'>=</span> <span class='n'>bucket</span><span class='o'>[</span><span class='s2'>&quot;private/folder/photo.jpg&quot;</span><span class='o'>]</span>
+    <span class='n'>object</span><span class='o'>.</span><span class='n'>destroy</span>
+    
+    <span class='c1'># delete an object but raise an error if it fails</span>
+    <span class='n'>object</span> <span class='o'>=</span> <span class='n'>bucket</span><span class='o'>[</span><span class='s2'>&quot;private/folder/photo.jpg&quot;</span><span class='o'>]</span>
+    <span class='n'>object</span><span class='o'>.</span><span class='n'>destroy!</span>
+
+    <span class='c1'># create a bucket</span>
+    <span class='n'>bucket</span> <span class='o'>=</span> <span class='no'>Bucket</span><span class='o'>::</span><span class='n'>create</span><span class='o'>[</span><span class='s2'>&quot;my-other-bucket&quot;</span><span class='o'>]</span>
+
+    <span class='c1'># set a bucket&#39;s acl</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>acl</span> <span class='o'>=</span> <span class='no'>Acl</span><span class='o'>.</span><span class='n'>new</span><span class='p'>(</span><span class='no'>File</span><span class='o'>.</span><span class='n'>read</span> <span class='s2'>&quot;/path/to/acl.xml&quot;</span><span class='p'>)</span>
+
+    <span class='c1'># get a bucket&#39;s acl</span>
+    <span class='n'>acl</span> <span class='o'>=</span> <span class='n'>bucket</span><span class='o'>.</span><span class='n'>acl</span>
+    
+    <span class='c1'># delete a bucket</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>destroy</span>
+
+    <span class='c1'># delete a bucket but raise an error if it fails</span>
+    <span class='n'>bucket</span><span class='o'>.</span><span class='n'>destroy!</span>
+    
+</code></pre>
+</div>
+<h2 id='configuration'>Configuration</h2>
+
+<p>The <code>GoogleStorage::Authorization</code> class by default expects to find a file named <code>google-storage.yml</code> in the current directory when it is instantiated.</p>
+<div class='highlight'><pre><code class='yaml'>    <span class='c1'># google storage id     </span>
+    <span class='l-Scalar-Plain'>id</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351</span>
+    
+    <span class='c1'># email address </span>
+    <span class='l-Scalar-Plain'>email</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>user@example.com</span>                                             
+    
+    <span class='c1'># forum/group email address (optional)</span>
+    <span class='l-Scalar-Plain'>group-email</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>gs-discussion@googlegroups.com</span>                          
+    
+    <span class='c1'># google apps email address (optional)</span>
+    <span class='l-Scalar-Plain'>apps-domain</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>user@example.com</span>                                        
+
+    <span class='c1'># google storage access_key/secret_key section; </span>
+    <span class='c1'># define as many pairs as needed - the label for each</span>
+    <span class='c1'># pair is arbitrary</span>
+    <span class='l-Scalar-Plain'>development</span><span class='p-Indicator'>:</span>                                                         
+      <span class='l-Scalar-Plain'>access_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>GOOGTBR1091493294JAG</span>                                   
+      <span class='l-Scalar-Plain'>secret_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7</span>                
+                                                                         
+    <span class='l-Scalar-Plain'>stage</span><span class='p-Indicator'>:</span>                                                               
+      <span class='l-Scalar-Plain'>access_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>GOOGNBAS5DFA9FF9234C</span>                                   
+      <span class='l-Scalar-Plain'>secret_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw</span>                
+                                                                         
+    <span class='l-Scalar-Plain'>production</span><span class='p-Indicator'>:</span>                                                          
+      <span class='l-Scalar-Plain'>access_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>GOOGNBSBNLA9234ZV94D</span>                                   
+      <span class='l-Scalar-Plain'>secret_key</span><span class='p-Indicator'>:</span> <span class='l-Scalar-Plain'>AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww</span>                
+    
+</code></pre>
+</div>
+<p>For more information related to authorization requirements to Google Storage see the Google Storage API&#8217;s <a href='https://code.google.com/apis/storage/docs/developer-guide.html#authorization'>Developer Guide</a></p>
+
+<h2 id='dependencies'>Dependencies</h2>
+
+<ul>
+<li><code>Nokogiri (&gt;= 1.4.3.1)</code></li>
+
+<li><code>Typhoeus (&gt;= 0.1.31)</code></li>
+</ul>
+
+<p>It also has pieces of the <code>Facets</code> gem embedded in it.</p>
+
+<h2 id='download'>Download</h2>
+
+<p>You can download this project in either <a href='http://github.com/jurisgalang/google-storage/zipball/master'>zip</a> or <a href='http://github.com/jurisgalang/google-storage/tarball/master&quot;'>tar</a> formats.</p>
+
+<p>You can also clone the project with <a href='http://git-scm.com'>Git</a> by running:</p>
+<div class='highlight'><pre><code class='bash'>    git clone git://github.com/jurisgalang/google-storage
+    
+</code></pre>
+</div>
+<h2 id='authors'>Authors</h2>
+
+<p>Juris Galang (http://github.com/jurisgalang/)</p>
+
+<h2 id='license'>License</h2>
+
+<p>Dual licensed under the MIT or GPL Version 2 licenses.</p>
+    
+    <div class="footer">
+      copyright &copy; 2010, juris galang. all rights reserved.<br/>
+      get the source code on GitHub : <a href="http://github.com/jurisgalang/google-storage">jurisgalang/google-storage</a>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+    document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+  <script type="text/javascript">
+    try {
+      var pageTracker = _gat._getTracker("UA-0000000-1");
+      pageTracker._trackPageview();
+    } catch(err) { }
+  </script>
+</body>
+</html>
