@@ -82,6 +82,12 @@ The basics:
 
     # delete a bucket but raise an error if it fails
     bucket.destroy!
+    
+    # copy an object from another bucket
+    bucket.copy "source-bucket/photo.jpg"
+
+    # copy an object from another bucket into a specific location
+    bucket.copy "source-bucket/photo.jpg", :dest => "private/folder/photo.jpg"
     {% endhighlight %}
 
 Configuration 
