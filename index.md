@@ -143,7 +143,7 @@ by running:
 
 Authors
 -------
-Juris Galang (http://github.com/jurisgalang/)
+[Juris Galang](http://github.com/jurisgalang/)
 
 License
 -------
