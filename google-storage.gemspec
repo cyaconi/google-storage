@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.email = %q{jurisgalang@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.markdown"
+     "README.md"
   ]
   s.files = [
     ".document",
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
      "GPL-LICENSE.txt",
      "LICENSE",
      "MIT-LICENSE.txt",
-     "README.markdown",
+     "README.md",
      "Rakefile",
      "VERSION",
      "fixtures/google-storage.yml",
