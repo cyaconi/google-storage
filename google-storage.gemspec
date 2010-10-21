@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{google-storage}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
      "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/jurisgalang/google-storage}
+  s.homepage = %q{http://jurisgalang.github.com/google-storage}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
