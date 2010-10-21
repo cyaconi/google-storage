@@ -61,7 +61,6 @@ describe "Bucket" do
     lambda{ @bucket = Bucket.create('jurisgalang-test-create', @authorization, 'public-read-write') }.should_not raise_error
     @bucket.should be_an_instance_of Bucket
     # TODO: verify that a bucket named jurisgalang-test-create exists
-    
     lambda{ @bucket.destroy! }.should_not raise_error
     # TODO: verify that a bucket named jurisgalang-test-create no longer exists
   end
@@ -73,7 +72,6 @@ describe "Bucket" do
     acl.add(:scope => :all_users, :permission => Acl::PERMISSION_READ)
     acl.add(:scope => :all_authenticated_users, :permission => Acl::PERMISSION_WRITE)
     lambda{ @bucket.acl = acl }.should_not raise_error
-  
     # TODO: need to verify that the new permissions are in the acl
     lambda{ @bucket.destroy! }.should_not raise_error
   end
@@ -90,7 +88,6 @@ describe "Bucket" do
     @object.path.should eql 'lorem-ipsum.txt'
     File.exists?("/tmp/lorem-ipsum.txt").should eql true
     File.size("/tmp/lorem-ipsum.txt").should eql @object.content.length
-    
     lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp" }.should raise_error
     File.delete "/tmp/lorem-ipsum.txt"
   end
@@ -99,7 +96,6 @@ describe "Bucket" do
     lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp/file.txt", :overwrite => true }.should_not raise_error
     File.exists?("/tmp/file.txt").should eql true
     File.size("/tmp/file.txt").should eql @object.content.length
-    
     lambda{ @object = @bucket.download 'lorem-ipsum.txt', :dest => "/tmp/file.txt" }.should raise_error
     File.delete "/tmp/file.txt"
   end
@@ -108,8 +104,17 @@ describe "Bucket" do
     lambda{ @object = @bucket.upload 'lorem ipsum dolor', :dest => "upload-test.txt" }.should_not raise_error
     @object.should be_an_instance_of GoogleStorage::Object
     @object.path.should eql 'upload-test.txt'
-    
     lambda{ @object.destroy! }.should_not raise_error
+  end
+  
+  it "should copy object from another bucket" do
+    lambda{ @dest = Bucket.create('jurisgalang-test-create', @authorization, 'public-read-write') }.should_not raise_error
+    @dest.should be_an_instance_of Bucket
+    lambda{ @object = @dest.copy "jurisgalang/lorem-ipsum.txt" }.should_not raise_error
+    @object.should be_an_instance_of GoogleStorage::Object
+    @object.path.should eql 'lorem-ipsum.txt'
+    lambda{ @object.destroy! }.should_not raise_error
+    lambda{ @dest.destroy! }.should_not raise_error
   end
   
   it "should raise error when using destroy! to delete a non-existent bucket" do

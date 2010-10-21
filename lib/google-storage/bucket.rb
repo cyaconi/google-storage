@@ -112,8 +112,7 @@ module GoogleStorage
         get options
         save dest, overwrite unless dest.nil?
       end
-    rescue NotModifiedException, 
-      PreconditionFailedException
+    rescue NotModifiedException, PreconditionFailedException
     end
     
     def delete path
@@ -131,7 +130,7 @@ module GoogleStorage
         options.delete(:dest) || basename
       when File
         options[:body] = File.read(src.path)
-        options[:dest] || File.basename(src.path)
+        options.delete(:dest) || File.basename(src.path)
       else
         raise ArgumentError, "src must be either be a String or File"
       end
@@ -146,6 +145,14 @@ module GoogleStorage
       GoogleStorage::Object.new(self, path) { open options }
     rescue 
       nil
+    end
+    
+    # copy an object from another bucket into this bucket
+    def copy src, options = { }
+      path = options.delete(:dest) || File.basename(src)
+      options[:'x-goog-copy-source'] = src
+      GoogleStorage::Object.new(self, path) { put options }
+    rescue PreconditionFailedException
     end
   end
 end
