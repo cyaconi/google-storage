@@ -1,11 +1,20 @@
-google-storage
-==============
 This gem implements Ruby bindings for the GoogleStorage API.
 
+[Google Storage](http://code.google.com/apis/storage/) lets you store, share, and manage your data on Google's 
+storage infrastructure. You can use Google Storage to store all sizes of files.
+
+Installation
+------------
+
+    {% highlight bash %}
+    gem install google-storage
+    {% endhighlight %}
+
 Usage
------
+-----    
 The basics:
 
+    {% highlight ruby %}
     # use the gem
     require 'google-storage'
     include GoogleStorage
@@ -70,60 +79,80 @@ The basics:
 
     # delete a bucket but raise an error if it fails
     bucket.destroy!
+    {% endhighlight %}
 
 Configuration 
 -------------
 The `GoogleStorage::Authorization` class by default expects to find a file 
 named `google-storage.yml` in the current directory when it is instantiated.
 
-Here's what the file's contents should look like:
-
-    id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351 # google storage id     
-    email: user@example.com                                              # email address, eg:   
-    group-email: gs-discussion@googlegroups.com                          # forum/group email address
-    apps-domain: user@example.com                                        # google apps email address
-
-    # google storage access_key/secret_key section
-    # define as many pairs as needed
-    development:                                                         # key-pair label
-      access_key: GOOGTBR1091493294JAG
-      secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7               # google storage secret key, eg: 
+    {% highlight yaml %}
+    # google storage id     
+    id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
     
-    stage:                                                               # key-pair label
-      access_key: GOOGNBAS5DFA9FF9234C                                   # google storage access key
-      secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw               # google storage secret key, eg: 
-              
-    production:                                                          # key-pair label
-      access_key: GOOGNBSBNLA9234ZV94D                                   # google storage access key
-      secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww               # google storage secret key, eg: 
+    # email address 
+    email: user@example.com                                             
+    
+    # forum/group email address (optional)
+    group-email: gs-discussion@googlegroups.com                          
+    
+    # google apps email address (optional)
+    apps-domain: user@example.com                                        
+
+    # google storage access_key/secret_key section; 
+    # define as many pairs as needed - the label for each
+    # pair is arbitrary
+    development:                                                         
+      access_key: GOOGTBR1091493294JAG                                   
+      secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
+                                                                         
+    stage:                                                               
+      access_key: GOOGNBAS5DFA9FF9234C                                   
+      secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
+                                                                         
+    production:                                                          
+      access_key: GOOGNBSBNLA9234ZV94D                                   
+      secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
+    {% endhighlight %}
 
 For more information related to authorization requirements to Google Storage
 see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
 
-TODO
-----
-* Examples for using the GoogleStorage::Acl
-* Examples for alternative ways of instantiating GoogleStorage::Authorization
-* Section on how to setup a GS account for development to be able to run the
-  project's tests.
-* Example for copying an object from one bucket into another 
-* Style examples when using the GoogleStorage::Bucket class
-* Style examples when using the GoogleStorage::Object class
+Dependencies
+------------
+* `Nokogiri (>= 1.4.3.1)`
+* `Typhoeus (>= 0.1.31)`
+
+It also has pieces of the `Facets` gem embedded in it.
+
+Download
+--------
+You can download this project in either
+[zip](http://github.com/jurisgalang/google-storage/zipball/master) or
+[tar](http://github.com/jurisgalang/google-storage/tarball/master") formats.
+
+You can also clone the project with [Git](http://git-scm.com)
+by running: 
+
+    {% highlight bash %}
+    git clone git://github.com/jurisgalang/google-storage
+    {% endhighlight %}
 
 Note on Patches/Pull Requests
------------------------------ 
+-----------------------------
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a 
-   commit by itself I can ignore when I pull)
+* Add tests for it. This is important so I don't break it in a future version 
+  unintentionally.
+* Commit, do not mess with rakefile, version, or history. (if you want to have 
+  your own version, that is fine but bump version in a commit by itself I can 
+  ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
+
+Author
+------
+[Juris Galang](http://github.com/jurisgalang/)
 
 License
 -------
 Dual licensed under the MIT or GPL Version 2 licenses.
-
----
-Copyright &copy; 2010, Juris Galang. All Rights Reserved.
