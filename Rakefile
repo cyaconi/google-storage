@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{Ruby bindings for the GoogleStorage API}
     gem.description = %Q{Ruby bindings for the GoogleStorage API}
     gem.email = "jurisgalang@gmail.com"
-    gem.homepage = "http://github.com/jurisgalang/google-storage"
+    gem.homepage = "http://jurisgalang.github.com/google-storage"
     gem.authors = ["Juris Galang"]
     gem.add_dependency "typhoeus", ">= 0.1.31"
     gem.add_dependency "nokogiri", ">= 1.4.3.1"
