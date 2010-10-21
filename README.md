@@ -120,10 +120,15 @@ see the Google Storage API's [Developer Guide](https://code.google.com/apis/stor
 
 Dependencies
 ------------
-* `Nokogiri (>= 1.4.3.1)`
-* `Typhoeus (>= 0.1.31)`
+Runtime:
+* `Nokogiri >= 1.4.3.1`
+* `Typhoeus >= 0.1.31`
 
-It also has pieces of the `Facets` gem embedded in it.
+It also has pieces of the `Facets` gem embedded in the package itself.
+
+Development:
+* `yard >= 0`
+* `rspec >= 1.2.9`
 
 Download
 --------
