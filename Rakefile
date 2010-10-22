@@ -6,7 +6,11 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "google-storage"
     gem.summary = %Q{Ruby bindings for the GoogleStorage API}
-    gem.description = %Q{Ruby bindings for the GoogleStorage API}
+    gem.description = %Q{
+      Ruby bindings for the GoogleStorage API\n
+      Google Storage lets you store, share, and manage your data on Google's 
+      storage infrastructure. You can use Google Storage to store all sizes of files.
+    }
     gem.email = "jurisgalang@gmail.com"
     gem.homepage = "http://jurisgalang.github.com/google-storage"
     gem.authors = ["Juris Galang"]
