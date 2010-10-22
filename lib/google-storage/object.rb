@@ -1,13 +1,16 @@
 module GoogleStorage
   class Object < RequestMethods
-    attr_reader :path
-    attr_reader :fullpath
-    attr_reader :content
+    attr_reader :path      # the object's path/key relative to the bucket
+    attr_reader :fullpath  # the object's path/key prefixed with its bucket name
+    attr_reader :content   # the body/content of the object
     attr :acl
-    
+
+    # NOTE: the method for computing an object's fullpath does not feel right
+    # it should probably be named `canonicalpath`, but not sure if the 
+    # protocol (which seems to be gs://) should also be included in it - JG
     def initialize bucket, path, &block
       @path          = path
-      @fullpath      = File.join(bucket.name, path)
+      @fullpath      = [bucket.name, path].join('/').gsub(/\/{2,}/, '/')
       @bucket        = bucket
       @authorization = bucket.authorization
       instance_eval &block if block_given?
@@ -27,29 +30,27 @@ module GoogleStorage
     def open options = { }
       config = { :path => @fullpath } * options
       config[:range] = "bytes=0-0"
-      exec(:get, config) { |headers, content| load_metadata headers, content }
+      exec :get, config { |headers, content| load_metadata headers, content }
       self
     end
     
     def get options = { }
       config = { :path => @fullpath } * options
-      exec(:get, config) { |headers, content| load_metadata headers, content }
+      exec :get, config { |headers, content| load_metadata headers, content }
       self
     end
     
     def put options = { }
       config = { :path => @fullpath } * options
-      exec(:put, config) { |headers, content| load_metadata headers, content }
+      exec :put, config { |headers, content| load_metadata headers, content }
       self
     end
     
     def save path, overwrite = false
-      path = File.join(path, File.basename(@path)) \
+      path = File.join(path, File.basename(@path))   \
         if File.directory? path
-          
       raise IOError, "File `#{path}' already exist." \
         if File.file?(path) && !overwrite
-
       File.write(path, @content)
     end
 
@@ -70,7 +71,7 @@ module GoogleStorage
 
     def acl
       unless @acl
-        doc = exec :get, :path => @fullpath, :acl => true
+        doc  = exec :get, :path => @fullpath, :acl => true
         @acl = Acl.new(doc)
       end
       @acl

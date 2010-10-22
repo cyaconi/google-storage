@@ -73,18 +73,31 @@ module GoogleStorage
     # list the objects in a bucket
     def objects options = { }
       doc = exec :get, :path => @name, :params => options
+      
+      # convert certain field values to the appropriate type
       normalize = lambda do |k, v| 
         case k
         when 'last_modified' then DateTime.parse(v)
         when 'size'          then v.to_i
-        when 'e_tag'         then v.sub(/"/, '')
+        #when 'e_tag'         then v.sub(/"/, '')
         when 'owner'         then Acl::Owner.new(v)
         else v
         end
       end
-      #doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
-      #doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
-      doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+      
+      # return a list of hash representing the nodes of the document
+      list = doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+      
+      # decorate list with additional attributes
+      truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
+      prefixes  = doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
+      list.instance_variable_set :'@truncated', truncated
+      list.instance_variable_set :'@prefixes', prefixes
+      list.class.class_eval do
+        attr_reader :truncated
+        attr_reader :prefixes
+      end
+      list
     end
     
     # download an object from this bucket and returns and Object if the object
@@ -143,8 +156,7 @@ module GoogleStorage
     
     def [] path, options = { }
       GoogleStorage::Object.new(self, path) { open options }
-    rescue 
-      nil
+    rescue #Exception
     end
     
     # copy an object from another bucket into this bucket
