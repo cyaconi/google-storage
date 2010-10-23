@@ -1,13 +1,13 @@
 module GoogleStorage
   class Object < RequestMethods
     attr_reader :path
-    attr_reader :fullpath
+    attr_reader :canonicalpath
     attr_reader :content
     attr :acl
     
     def initialize bucket, path, &block
       @path          = path
-      @fullpath      = File.join(bucket.name, path)
+      @canonicalpath = [ bucket.name, path ].join("/").gsub(/\/{2,}/, "/")
       @bucket        = bucket
       @authorization = bucket.authorization
       instance_eval &block if block_given?
@@ -25,20 +25,20 @@ module GoogleStorage
     # but HEAD request is slow somehow. need to investigate how typhoues
     # does a HEAD request.
     def open options = { }
-      config = { :path => @fullpath } * options
+      config = { :path => @canonicalpath } * options
       config[:range] = "bytes=0-0"
       exec(:get, config) { |headers, content| load_metadata headers, content }
       self
     end
     
     def get options = { }
-      config = { :path => @fullpath } * options
+      config = { :path => @canonicalpath } * options
       exec(:get, config) { |headers, content| load_metadata headers, content }
       self
     end
     
     def put options = { }
-      config = { :path => @fullpath } * options
+      config = { :path => @canonicalpath } * options
       exec(:put, config) { |headers, content| load_metadata headers, content }
       self
     end
@@ -46,10 +46,8 @@ module GoogleStorage
     def save path, overwrite = false
       path = File.join(path, File.basename(@path)) \
         if File.directory? path
-          
       raise IOError, "File `#{path}' already exist." \
         if File.file?(path) && !overwrite
-
       File.write(path, @content)
     end
 
@@ -63,27 +61,29 @@ module GoogleStorage
     end
 
     def destroy!
-      exec :delete, :path => @fullpath
+      exec :delete, :path => @canonicalpath
       @content = nil
       @acl     = nil
     end
 
     def acl
       unless @acl
-        doc = exec :get, :path => @fullpath, :acl => true
+        doc  = exec :get, :path => @canonicalpath, :acl => true
         @acl = Acl.new(doc)
       end
       @acl
     end
     
     def acl= acl
-      exec :put, :path => @fullpath, :acl => true, :body => acl.to_s
-      @acl = acl
+      exec :put, :path => @canonicalpath, :acl => true, :body => acl.to_s
+      @acl = nil
     end
     
     private
     def load_metadata headers, content
       @content = content
+      #headers.rekey! { |k| (k =~ /^(ID|ETag)$/ ? \
+      #  k.downcase : k).methodize.gsub(/-/, '_') }
       headers.rekey! { |k| k.downcase.gsub(/-/, '_') }
       this = class << self; self; end
       headers.each do |k, v|

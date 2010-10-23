@@ -23,7 +23,7 @@ module GoogleStorage
 
     def acl= acl
       exec :put, :path => @name, :acl => true, :body => acl.to_s
-      @acl = acl
+      @acl = nil
     end
     
     # create a new bucket and optionally assign an acl.
@@ -82,9 +82,14 @@ module GoogleStorage
         else v
         end
       end
-      #doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
-      #doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
-      doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+      list      = doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+      prefixes  = doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
+      truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
+      list.class.class_eval{ attr_reader :prefixes }
+      list.instance_variable_set :'@prefixes',  prefixes
+      list.instance_variable_set :'@truncated', truncated
+      list.instance_eval{ def truncated?; @truncated; end }
+      list
     end
     
     # download an object from this bucket and returns and Object if the object
@@ -116,8 +121,7 @@ module GoogleStorage
     end
     
     def delete path
-      obj = Object.new(self, path)
-      obj.destroy
+      GoogleStorage::Object.new(self, path).destroy
     end
 
     # uploads an object into this bucket
@@ -142,9 +146,7 @@ module GoogleStorage
     end
     
     def [] path, options = { }
-      GoogleStorage::Object.new(self, path) { open options }
-    rescue 
-      nil
+      GoogleStorage::Object.new(self, path) { open options } rescue nil
     end
     
     # copy an object from another bucket into this bucket
