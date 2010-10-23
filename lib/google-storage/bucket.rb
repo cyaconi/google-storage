@@ -73,11 +73,13 @@ module GoogleStorage
     # list the objects in a bucket
     def objects options = { }
       doc = exec :get, :path => @name, :params => options
+      
+      # convert certain field values to the appropriate type
       normalize = lambda do |k, v| 
         case k
         when 'last_modified' then DateTime.parse(v)
         when 'size'          then v.to_i
-        when 'e_tag'         then v.sub(/"/, '')
+        #when 'e_tag'         then v.sub(/"/, '')
         when 'owner'         then Acl::Owner.new(v)
         else v
         end

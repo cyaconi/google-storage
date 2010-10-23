@@ -4,7 +4,10 @@ module GoogleStorage
     attr_reader :canonicalpath
     attr_reader :content
     attr :acl
-    
+
+    # NOTE: the method for computing an object's fullpath does not feel right
+    # it should probably be named `canonicalpath`, but not sure if the 
+    # protocol (which seems to be gs://) should also be included in it - JG
     def initialize bucket, path, &block
       @path          = path
       @canonicalpath = [ bucket.name, path ].join("/").gsub(/\/{2,}/, "/")
@@ -27,7 +30,7 @@ module GoogleStorage
     def open options = { }
       config = { :path => @canonicalpath } * options
       config[:range] = "bytes=0-0"
-      exec(:get, config) { |headers, content| load_metadata headers, content }
+      exec :get, config { |headers, content| load_metadata headers, content }
       self
     end
     
@@ -44,7 +47,7 @@ module GoogleStorage
     end
     
     def save path, overwrite = false
-      path = File.join(path, File.basename(@path)) \
+      path = File.join(path, File.basename(@path))   \
         if File.directory? path
       raise IOError, "File `#{path}' already exist." \
         if File.file?(path) && !overwrite

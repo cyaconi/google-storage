@@ -43,7 +43,6 @@ module GoogleStorage
       @hydra ||= Typhoeus::Hydra.new
       req = Typhoeus::Request.new(url.to_s, config)
       req.on_complete do |res|
-        puts ">> #{res.body}" if verb == :head
         doc = Nokogiri::XML(res.body)
         raise_error doc unless res.success?
         if block_given?
