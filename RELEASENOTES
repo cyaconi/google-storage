@@ -1,0 +1,29 @@
+0.1.0 [UNRELEASED]
+-----
+- Breaking changes:
+  * Modified google-storage config layout.
+  * Service class now requires a Configuration object (instead of 
+    Authorization)
+
+0.0.4 [0ct 24, 2010]
+--------------------
+- #mkdir, #rmdir methods added to Bucket
+
+0.0.3 [0ct 20, 2010]
+--------------------
+- #copy method added to Bucket
+- Bug fixes.
+
+0.0.2 [0ct 20, 2010]
+--------------------
+- #upload method added to Bucket
+- #open method added to Object
+- Bug fixes.
+
+0.0.1 [0ct 20, 2010]
+--------------------
+- Bug fixes.
+
+0.0.0 [0ct 20, 2010]
+--------------------
+- Initial releases.
