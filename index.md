@@ -47,7 +47,7 @@ The basics:
 
     # remove a folder but raise an error if it fails
     bucket.rmdir! "private/folder"
-
+    
     # get a reference to an object
     object = bucket["lorem-ipsum.txt"]
     
