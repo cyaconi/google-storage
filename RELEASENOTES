@@ -1,9 +1,8 @@
 0.1.0  [UNRELEASED]
---------------------
-- Breaking changes:
-  * Modified google-storage config layout.
-  * Service class now requires a Configuration object (instead of 
-    Authorization)
+-------------------
+- [BREAKING CHANGE] Modified google-storage config layout.
+- [BREAKING CHANGE] Service class now requires a Configuration object 
+  (instead of Authorization)
 
 0.0.4 [0ct 24, 2010]
 --------------------
