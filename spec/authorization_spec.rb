@@ -6,12 +6,12 @@ describe "Authorization" do
     @hash_config = config = {
       'id'    => '84fac329bceSAMPLE777d5d22b8SAMPLE77d85ac2SAMPLE2dfcf7c4adf34da46',
       'email' => 'jane@gmail.com',
-      'test'         => { 'access_key' => 'GOOGTS7C7FUP3AIRVJTE', 
-                          'secret_key' => '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef' },
-      'production'   => { 'access_key' => 'GOOGTS8C8FUP3AIRVJTE', 
-                          'secret_key' => '9abcdef0123456789abcdef0123456789abcdef0123012345678456789abcdef' },
-      'development'  => { 'access_key' => 'GOOGTS9C9FUP3AIRVJTE', 
-                          'secret_key' => '0123456789a789abcdefbcdef0123456789abcdef0123456789abcdef0123456' }
+      'test'         => { 'access-key' => 'GOOGTS7C7FUP3AIRVJTE', 
+                          'secret-key' => '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef' },
+      'production'   => { 'access-key' => 'GOOGTS8C8FUP3AIRVJTE', 
+                          'secret-key' => '9abcdef0123456789abcdef0123456789abcdef0123012345678456789abcdef' },
+      'development'  => { 'access-key' => 'GOOGTS9C9FUP3AIRVJTE', 
+                          'secret-key' => '0123456789a789abcdefbcdef0123456789abcdef0123456789abcdef0123456' }
     }
   end
   

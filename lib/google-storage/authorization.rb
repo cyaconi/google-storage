@@ -16,14 +16,14 @@ module GoogleStorage
     
     # generates an authorization string
     def generate(verb, path, headers, authsig)
-      "#{authsig} #{@keys[:access_key]}:#{signature message(verb, path, headers)}"
+      "#{authsig} #{@keys[:'access-key']}:#{signature message(verb, path, headers)}"
     end
     
     private
     # generate a base64 encoded sha1 digest of the message
     def signature(message)
       digest = OpenSSL::Digest::Digest.new('sha1')
-      Base64.encode64(OpenSSL::HMAC.digest(digest, @keys[:secret_key], message)).gsub("\n", "").toutf8
+      Base64.encode64(OpenSSL::HMAC.digest(digest, @keys[:'secret-key'], message)).gsub("\n", "").toutf8
     end
 
     # construct the message to sign string

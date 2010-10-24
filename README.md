@@ -109,20 +109,20 @@ named `google-storage.yml` in the current directory when it is instantiated.
     # google apps email address (optional)
     apps-domain: user@example.com                                        
 
-    # google storage access_key/secret_key section; 
+    # google storage access-key/secret-key section; 
     # define as many pairs as needed - the label for each
     # pair is arbitrary
     development:                                                         
-      access_key: GOOGTBR1091493294JAG                                   
-      secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
+      access-key: GOOGTBR1091493294JAG                                   
+      secret-key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
                                                                          
     stage:                                                               
-      access_key: GOOGNBAS5DFA9FF9234C                                   
-      secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
+      access-key: GOOGNBAS5DFA9FF9234C                                   
+      secret-key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
                                                                          
     production:                                                          
-      access_key: GOOGNBSBNLA9234ZV94D                                   
-      secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
+      access-key: GOOGNBSBNLA9234ZV94D                                   
+      secret-key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
 
 For more information related to authorization requirements to Google Storage
 see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)

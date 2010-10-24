@@ -17,7 +17,7 @@ module GoogleStorage
       verb = verb.to_s.upcase
       body = options.delete(:body)
       path = options.delete(:path)
-      url  = URI.parse("http://#{HOST}/#{path}")
+      url  = URI.parse("https://#{HOST}/#{path}")
 
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
