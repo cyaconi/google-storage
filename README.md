@@ -32,6 +32,15 @@ The basics:
     bucket.objects.each do |entry|
       puts "#{entry[:key]} #{entry[:last_modified]} #{entry[:size]}"
     end
+
+    # create a folder
+    bucket.mkdir "private/folder"
+
+    # remove a folder
+    bucket.rmdir "private/folder"
+
+    # remove a folder but raise an error if it fails
+    bucket.rmdir! "private/folder"
     
     # get a reference to an object
     object = bucket["lorem-ipsum.txt"]
