@@ -5,12 +5,17 @@
 
 Gem::Specification.new do |s|
   s.name = %q{google-storage}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
-  s.date = %q{2010-10-20}
-  s.description = %q{Ruby bindings for the GoogleStorage API}
+  s.date = %q{2010-10-24}
+  s.description = %q{
+      Ruby bindings for the GoogleStorage API
+
+      Google Storage lets you store, share, and manage your data on Google's 
+      storage infrastructure. You can use Google Storage to store all sizes of files.
+    }
   s.email = %q{jurisgalang@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
