@@ -22,9 +22,14 @@ The basics:
     require 'google-storage'
     include GoogleStorage
     
-    # create an authorization object to use for services
-    authorization = Authorization.new("production")
-    service       = Service.new(authorization)
+    # load a configuration file
+    gsconfig = Configuration.new("/path/to/google-storage.yml")
+
+    # get a service object
+    service = Service.new(gsconfig)
+
+    # get a service object, specify which key pair to use
+    service = Service.new(gsconfig, "development")
 
     # list buckets
     service.buckets.each do |entry|
@@ -38,6 +43,12 @@ The basics:
     bucket.objects.each do |entry|
       puts "#{entry[:key]} #{entry[:last_modified]} #{entry[:size]}"
     end
+    
+    # print/display if object list is truncated
+    puts bucket.objects.truncated?
+
+    # print/display common prefixes used to get the list of objects
+    puts bucket.objects.prefixes.inspect
 
     # create a folder
     bucket.mkdir "private/folder"
@@ -101,36 +112,46 @@ The basics:
 
 Configuration 
 -------------
-The `GoogleStorage::Authorization` class by default expects to find a file 
+The `GoogleStorage::Configuration` class by default expects to find a file 
 named `google-storage.yml` in the current directory when it is instantiated.
 
     {% highlight yaml %}
-    # google storage id     
-    id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
-    
-    # email address 
-    email: user@example.com                                             
-    
-    # forum/group email address (optional)
-    group-email: gs-discussion@googlegroups.com                          
-    
-    # google apps email address (optional)
-    apps-domain: user@example.com                                        
+    # gem/library runtime settings
+    configuration:
+      # default protocol used when accessing the service provider
+      ssl: true
 
-    # google storage access_key/secret_key section; 
-    # define as many pairs as needed - the label for each
-    # pair is arbitrary
-    development:                                                         
-      access_key: GOOGTBR1091493294JAG                                   
-      secret_key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
-                                                                         
-    stage:                                                               
-      access_key: GOOGNBAS5DFA9FF9234C                                   
-      secret_key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
-                                                                         
-    production:                                                          
-      access_key: GOOGNBSBNLA9234ZV94D                                   
-      secret_key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
+      # default storage provider id (GOOG1 or AWS) when requesting service
+      provider: GOOG1 
+
+    # set the appropriate values in this configuration file if you wish to run the 
+    # tests; ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
+    authorization:  
+      # google storage id
+      id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
+
+      # email address
+      email: user@example.com
+
+      # forum/group email address (optional)
+      group-email: gs-discussion@googlegroups.com
+
+      # google apps email address (optional)
+      apps-domain: user@example.com
+
+      # google storage access_key/secret_key section; define as many pairs as \
+      # needed - the label for each pair is arbitrary.
+      development:
+        access-key: GOOGTBR1091493294JAG
+        secret-key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7
+
+      stage:
+        access-key: GOOGNBAS5DFA9FF9234C
+        secret-key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw
+
+      production:
+        access-key: GOOGNBSBNLA9234ZV94D
+        secret-key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww
     {% endhighlight %}
 
 For more information related to authorization requirements to Google Storage
