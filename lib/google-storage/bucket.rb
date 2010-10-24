@@ -77,10 +77,9 @@ module GoogleStorage
       # convert certain field values to the appropriate type
       normalize = lambda do |k, v| 
         case k
-        #when 'last_modified' then DateTime.parse(v)
-        when 'lastmodified' then DateTime.parse(v)
-        when 'size'         then v.to_i
-        when 'owner'        then Acl::Owner.new(v)
+        when 'last_modified' then DateTime.parse(v)
+        when 'size'          then v.to_i
+        when 'owner'         then Acl::Owner.new(v)
         else v
         end
       end
