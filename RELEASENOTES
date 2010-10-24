@@ -1,5 +1,5 @@
-0.1.0 [UNRELEASED]
------
+0.1.0  [UNRELEASED]
+--------------------
 - Breaking changes:
   * Modified google-storage config layout.
   * Service class now requires a Configuration object (instead of 
