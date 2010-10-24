@@ -77,10 +77,10 @@ module GoogleStorage
       # convert certain field values to the appropriate type
       normalize = lambda do |k, v| 
         case k
-        when 'last_modified' then DateTime.parse(v)
-        when 'size'          then v.to_i
-        #when 'e_tag'         then v.sub(/"/, '')
-        when 'owner'         then Acl::Owner.new(v)
+        #when 'last_modified' then DateTime.parse(v)
+        when 'lastmodified' then DateTime.parse(v)
+        when 'size'         then v.to_i
+        when 'owner'        then Acl::Owner.new(v)
         else v
         end
       end
@@ -157,6 +157,23 @@ module GoogleStorage
       options[:'x-goog-copy-source'] = src
       GoogleStorage::Object.new(self, path) { put options }
     rescue PreconditionFailedException
+    end
+    
+    def mkdir path
+      path = "#{path.gsub(/\/*$/, '')}_$folder$"
+      GoogleStorage::Object.new(self, path).put
+    end
+    
+    def rmdir path
+      rmdir!(path)
+      true
+    rescue NoSuchKeyException
+      false
+    end
+
+    def rmdir! path
+      path = "#{path.gsub(/\/*$/, '')}_$folder$"
+      GoogleStorage::Object.new(self, path).destroy!
     end
   end
 end

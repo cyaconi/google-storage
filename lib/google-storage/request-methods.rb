@@ -10,7 +10,6 @@ module GoogleStorage
     def raise_error(error)
       code    = error.xpath("/Error/Code").text
       message = error.xpath("/Error/Message").text
-      puts "raising: #{code}Exception"
       raise GoogleStorage::RequestMethodException(code), "#{message}" 
     end
     
@@ -19,7 +18,7 @@ module GoogleStorage
       body = options.delete(:body)
       path = options.delete(:path)
       url  = URI.parse("http://#{HOST}/#{path}")
-      
+
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
       headers['Content-Type']   = options.delete(:'content-type') || DEFAULT_CONTENT_TYPE

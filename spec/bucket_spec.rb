@@ -14,7 +14,7 @@ describe "Bucket" do
         server date cache_control x_content_type_options 
         x_xss_protection last_modified pragma }.each do |attr|
       @object.should respond_to :"#{attr}"
-      #@object.content.should be nil
+      @object.content.should be nil
     end
   end
   
@@ -25,9 +25,9 @@ describe "Bucket" do
   
   it "should list all of the objects that are in the bucket" do
     lambda{ @bucket.objects }.should_not raise_error
-    bucket = @bucket.objects
-    bucket.should be_an_instance_of Array
-    bucket.length.should eql 9
+    objects = @bucket.objects
+    objects.should be_an_instance_of Array
+    objects.length.should eql 9
   end
   
   it "should enforce parameters when listing the contents of a bucket" do
@@ -118,8 +118,25 @@ describe "Bucket" do
   end
   
   it "should raise error when using destroy! to delete a non-existent bucket" do
+    # TODO
   end
   
-  it "should raise error when using destroy to delete a non-existent bucket" do
+  it "should not raise error when using destroy to delete a non-existent bucket" do
+    # TODO
+  end
+  
+  it "should be able to create a folder" do
+    lambda{ @object = @bucket.mkdir 'private/folder' }.should_not raise_error
+    @object.folder?.should eql true
+  end
+
+  it "should be able to delete a folder" do
+    lambda{ @result = @bucket.rmdir 'private/folder' }.should_not raise_error
+    @result.should eql true
+    
+    lambda{ @result = @bucket.rmdir 'private/folder' }.should_not raise_error
+    @result.should eql false
+
+    lambda{ @result = @bucket.rmdir! 'private/folder' }.should raise_error
   end
 end

@@ -5,15 +5,16 @@ module GoogleStorage
     attr_reader :content
     attr :acl
 
-    # NOTE: the method for computing an object's fullpath does not feel right
-    # it should probably be named `canonicalpath`, but not sure if the 
-    # protocol (which seems to be gs://) should also be included in it - JG
     def initialize bucket, path, &block
       @path          = path
       @canonicalpath = [ bucket.name, path ].join("/").gsub(/\/{2,}/, "/")
       @bucket        = bucket
       @authorization = bucket.authorization
       instance_eval &block if block_given?
+    end
+    
+    def folder?
+      @canonicalpath.match(/_\$folder\$$/) != nil
     end
     
     # retrieves the object's metadata 
@@ -30,7 +31,7 @@ module GoogleStorage
     def open options = { }
       config = { :path => @canonicalpath } * options
       config[:range] = "bytes=0-0"
-      exec :get, config { |headers, content| load_metadata headers, content }
+      exec(:get, config) { |headers, content| load_metadata headers, nil }
       self
     end
     

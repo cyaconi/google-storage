@@ -9,7 +9,7 @@ module GoogleStorage
       end
 
       def self.UserByEmail(permission, identity)
-        email = identity[:email] || identity[:email_address]
+        email = identity[:email] || identity[:email_address] || identity[:emailaddress]
         raise ArgumentError, "Email Address must be specified." unless Acl.email? "#{email}"
         new(__method__, permission, email, identity[:name])
       end
@@ -20,7 +20,7 @@ module GoogleStorage
       end
 
       def self.GroupByEmail(permission, identity)
-        email = identity[:email] || identity[:email_address]
+        email = identity[:email] || identity[:email_address] || identity[:emailaddress]
         raise ArgumentError, "Email Address must be specified." unless Acl.email? "#{email}"
         new(__method__, permission, email, identity[:name])
       end

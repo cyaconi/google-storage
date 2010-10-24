@@ -14,7 +14,8 @@ module GoogleStorage
     # the Authorization used at instantiation
     def buckets
       doc       = exec :get
-      normalize = lambda{ |k, v| k == :creation_date ? DateTime.parse(v) : v }
+      #normalize = lambda{ |k, v| k == :creation_date ? DateTime.parse(v) : v }
+      normalize = lambda{ |k, v|  k == :creationdate ? DateTime.parse(v) : v }
       doc.xpath("//xmlns:Bucket").map{ |node| node.to_h(&normalize) }
     end
   end
