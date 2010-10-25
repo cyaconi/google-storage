@@ -1,29 +1,20 @@
 module GoogleStorage
   class Authorization
-    # creates an Authorization string generator
-    # using the declared keys in config.
-    def initialize(label, config = { })
-      @config = if config.empty?
-        YAML.load(File.read "google-storage.yml")
-      elsif config.instance_of? String
-        YAML.load(File.read config)
-      else
-        config
-      end
-      @config.recursively!{ |h| h.symbolize_keys! }
-      @keys = @config[label.to_sym]
+    # creates an Authorization string generator using the key-pair
+    def initialize(keypair)
+      @keypair = keypair
     end
     
     # generates an authorization string
     def generate(verb, path, headers, authsig)
-      "#{authsig} #{@keys[:'access-key']}:#{signature message(verb, path, headers)}"
+      "#{authsig} #{@keypair[:'access-key']}:#{signature message(verb, path, headers)}"
     end
     
     private
     # generate a base64 encoded sha1 digest of the message
     def signature(message)
       digest = OpenSSL::Digest::Digest.new('sha1')
-      Base64.encode64(OpenSSL::HMAC.digest(digest, @keys[:'secret-key'], message)).gsub("\n", "").toutf8
+      Base64.encode64(OpenSSL::HMAC.digest(digest, @keypair[:'secret-key'], message)).gsub("\n", "").toutf8
     end
 
     # construct the message to sign string
