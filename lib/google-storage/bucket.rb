@@ -83,13 +83,18 @@ module GoogleStorage
         else v
         end
       end
-      list      = doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+
+      # extract the list of objects
+      list = doc.xpath("//xmlns:Contents").map{ |node| node.to_h(&normalize) }
+      
+      # decorate the list with additional attributes 
       prefixes  = doc.xpath("//xmlns:CommonPrefixes/Prefix").map{ |node| node.text }
       truncated = doc.xpath("//xmlns:IsTruncated").text =~ /^true$/i
       list.class.class_eval{ attr_reader :prefixes }
       list.instance_variable_set :'@prefixes',  prefixes
       list.instance_variable_set :'@truncated', truncated
       list.instance_eval{ def truncated?; @truncated; end }
+      
       list
     end
     
@@ -142,23 +147,19 @@ module GoogleStorage
       path.gsub!(/\//, options.delete(:delimiter) || "/")
 
       options[:'content-type'] ||= MimeType.of path
-      GoogleStorage::Object.new(self, path) { put options }
+      GoogleStorage::Object.new(self, path).put options
     rescue PreconditionFailedException
     end
     
     def [] path, options = { }
-      GoogleStorage::Object.new(self, path) { open options } 
-    rescue => e
-      puts e
-      puts e.backtrace
-      nil
+      GoogleStorage::Object.new(self, path).open options rescue nil
     end
     
     # copy an object from another bucket into this bucket
     def copy src, options = { }
       path = options.delete(:dest) || File.basename(src)
       options[:'x-goog-copy-source'] = src
-      GoogleStorage::Object.new(self, path) { put options }
+      GoogleStorage::Object.new(self, path).put options
     rescue PreconditionFailedException
     end
     
