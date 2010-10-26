@@ -13,9 +13,15 @@ module GoogleStorage
       instance_eval &block if block_given?
     end
     
+    def file?
+      not folder?
+    end
+    
     def folder?
       @canonicalpath.match(/_\$folder\$$/) != nil
     end
+    
+    alias :directory?, :folder?
     
     # retrieves the object's metadata 
     # raises NoSuchKeyException if the object does not exist
