@@ -30,7 +30,7 @@ module GoogleStorage
       params = options.delete(:params)
       path   = url.path 
       path << "?acl" if options.delete(:acl)
-      headers['Authorization'] = @authorization.generate(verb, path, headers, "GOOG1")
+      headers['Authorization'] = @credentials.authorization(verb, path, headers, "GOOG1")
       
       config = { 
         :method  => verb,

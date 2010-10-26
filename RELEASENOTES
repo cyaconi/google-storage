@@ -3,6 +3,8 @@
 - [BREAKING CHANGE] Modified google-storage config layout.
 - [BREAKING CHANGE] Service class now requires a Configuration object 
   (instead of Authorization)
+- [BREAKING CHANGE] Authorization class replaced with Credentials class
+- Updated tests
 
 0.0.4 [0ct 24, 2010]
 --------------------

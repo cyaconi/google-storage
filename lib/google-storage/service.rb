@@ -1,27 +1,17 @@
 module GoogleStorage
   class Service < RequestMethods
-    # configuration is an instance of GoogleStorage::Configuration;
-    # label refers to the label of the keypair to us when computing 
-    # the authorization string
-    #
-    # sample usage:
-    # 
-    #   config = Configuration.new("/path/to/google-storage.yml")
-    #   Service.new(config, :development)
-    #
-    def initialize configuration, label=nil
-      @configuration = configuration
-      @authorization = configuration.authorization(label)
+    def initialize credentials
+      @credentials = credentials
     end
     
     # returns a Bucket object
     # raise an exception if then named bucket does not exist
     def [] name
-      Bucket.open(name.to_s, @authorization)
+      Bucket.open(name.to_s, @credentials)
     end
     
     # returns a list of buckets owned as described by 
-    # the Authorization used at instantiation
+    # the Credentials used at instantiation
     def buckets
       doc       = exec :get
       normalize = lambda{ |k, v|  k == :creationdate ? DateTime.parse(v) : v }

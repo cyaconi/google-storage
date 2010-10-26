@@ -16,9 +16,9 @@ The basics:
     require 'google-storage'
     include GoogleStorage
     
-    # create an authorization object to use for services
-    authorization = Authorization.new("production")
-    service       = Service.new(authorization)
+    # create a credentials object to use for services
+    credentials = Credentials.new(:accesskey => '...', :secretkey => '...')
+    service     = Service.new(credentials)
 
     # list buckets
     service.buckets.each do |entry|
@@ -94,7 +94,7 @@ The basics:
 
 Configuration 
 -------------
-The `GoogleStorage::Authorization` class by default expects to find a file 
+The `GoogleStorage::Credentials` class by default expects to find a file 
 named `google-storage.yml` in the current directory when it is instantiated.
 
     # google storage id     
@@ -109,20 +109,20 @@ named `google-storage.yml` in the current directory when it is instantiated.
     # google apps email address (optional)
     apps-domain: user@example.com                                        
 
-    # google storage access-key/secret-key section; 
+    # google storage accesskey/secretkey section; 
     # define as many pairs as needed - the label for each
     # pair is arbitrary
     development:                                                         
-      access-key: GOOGTBR1091493294JAG                                   
-      secret-key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
+      accesskey: GOOGTBR1091493294JAG                                   
+      secretkey: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
                                                                          
     stage:                                                               
-      access-key: GOOGNBAS5DFA9FF9234C                                   
-      secret-key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
+      accesskey: GOOGNBAS5DFA9FF9234C                                   
+      secretkey: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
                                                                          
     production:                                                          
-      access-key: GOOGNBSBNLA9234ZV94D                                   
-      secret-key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
+      accesskey: GOOGNBSBNLA9234ZV94D                                   
+      secretkey: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
 
 For more information related to authorization requirements to Google Storage
 see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)

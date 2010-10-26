@@ -1,20 +1,22 @@
 module GoogleStorage
-  class Authorization
-    # creates an Authorization string generator using the key-pair
+  class Credentials
+    # creates an Credentials string generator using the key-pair
     def initialize(keypair)
       @keypair = keypair
     end
     
     # generates an authorization string
-    def generate(verb, path, headers, authsig)
-      "#{authsig} #{@keypair[:'access-key']}:#{signature message(verb, path, headers)}"
+    def authorization(verb, path, headers, authsig)
+      "#{authsig} #{@keypair[:accesskey]}:" \
+      "#{signature message(verb, path, headers)}"
     end
     
     private
     # generate a base64 encoded sha1 digest of the message
     def signature(message)
       digest = OpenSSL::Digest::Digest.new('sha1')
-      Base64.encode64(OpenSSL::HMAC.digest(digest, @keypair[:'secret-key'], message)).gsub("\n", "").toutf8
+      Base64.encode64(OpenSSL::HMAC.digest(digest, \
+        @keypair[:secretkey], message)).gsub("\n", "").toutf8
     end
 
     # construct the message to sign string

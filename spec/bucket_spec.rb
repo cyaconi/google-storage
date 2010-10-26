@@ -3,8 +3,9 @@ include GoogleStorage
 
 describe "Bucket" do
   before :each do
-    @authorization = Authorization.new('development', 'fixtures/google-storage.yml')
-    @bucket        = Bucket.new('jurisgalang', @authorization)
+    config = Configuration.new('fixtures/google-storage.yml')
+    @credentials = config.credentials :development
+    @bucket      = Bucket.new('jurisgalang', @credentials)
   end
 
   it "should return an instance of object and its metadata attributes populated" do
@@ -19,7 +20,7 @@ describe "Bucket" do
   end
   
   it "should create an instance of Bucket" do
-    @authorization.should be_an_instance_of Authorization
+    @credentials.should be_an_instance_of Credentials
     @bucket.should be_an_instance_of Bucket
   end
   
@@ -58,7 +59,7 @@ describe "Bucket" do
   end
   
   it "should be able to create and delete a bucket" do
-    lambda{ @bucket = Bucket.create('jurisgalang-test-create', @authorization, 'public-read-write') }.should_not raise_error
+    lambda{ @bucket = Bucket.create('jurisgalang-test-create', @credentials, 'public-read-write') }.should_not raise_error
     @bucket.should be_an_instance_of Bucket
     # TODO: verify that a bucket named jurisgalang-test-create exists
     lambda{ @bucket.destroy! }.should_not raise_error
@@ -66,7 +67,7 @@ describe "Bucket" do
   end
   
   it "should be able to set a bucket's acl" do
-    @bucket = Bucket.create('jurisgalang-test-create', @authorization, 'public-read-write')
+    @bucket = Bucket.create('jurisgalang-test-create', @credentials, 'public-read-write')
     acl     = @bucket.acl
     acl.add(:scope => :user, :permission => Acl::PERMISSION_READ, :identity => 'bodjiegalang@gmail.com')
     acl.add(:scope => :all_users, :permission => Acl::PERMISSION_READ)
@@ -108,7 +109,7 @@ describe "Bucket" do
   end
   
   it "should copy object from another bucket" do
-    lambda{ @dest = Bucket.create('jurisgalang-test-create', @authorization, 'public-read-write') }.should_not raise_error
+    lambda{ @dest = Bucket.create('jurisgalang-test-create', @credentials, 'public-read-write') }.should_not raise_error
     @dest.should be_an_instance_of Bucket
     lambda{ @object = @dest.copy "jurisgalang/lorem-ipsum.txt" }.should_not raise_error
     @object.should be_an_instance_of GoogleStorage::Object

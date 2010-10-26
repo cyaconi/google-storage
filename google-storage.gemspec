@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
-  s.date = %q{2010-10-24}
+  s.date = %q{2010-10-25}
   s.description = %q{
       Ruby bindings for the GoogleStorage API
 
@@ -18,16 +18,15 @@ Gem::Specification.new do |s|
     }
   s.email = %q{jurisgalang@gmail.com}
   s.extra_rdoc_files = [
-    "LICENSE",
-     "README.md"
+    "README.md"
   ]
   s.files = [
     ".document",
      ".gitignore",
-     "GPL-LICENSE.txt",
-     "LICENSE",
-     "MIT-LICENSE.txt",
+     "GPL-LICENSE",
+     "MIT-LICENSE",
      "README.md",
+     "RELEASENOTES",
      "Rakefile",
      "VERSION",
      "fixtures/google-storage.yml",
@@ -37,9 +36,9 @@ Gem::Specification.new do |s|
      "lib/google-storage/acl-entry.rb",
      "lib/google-storage/acl-owner.rb",
      "lib/google-storage/acl.rb",
-     "lib/google-storage/authorization.rb",
      "lib/google-storage/base.rb",
      "lib/google-storage/bucket.rb",
+     "lib/google-storage/configuration.rb",
      "lib/google-storage/facets/blank.rb",
      "lib/google-storage/facets/file/write.rb",
      "lib/google-storage/facets/hash/op_mul.rb",
@@ -57,7 +56,6 @@ Gem::Specification.new do |s|
      "spec/acl-entry_spec.rb",
      "spec/acl-owner_spec.rb",
      "spec/acl_spec.rb",
-     "spec/authorization_spec.rb",
      "spec/bucket_spec.rb",
      "spec/object_spec.rb",
      "spec/service_spec.rb",
@@ -73,7 +71,6 @@ Gem::Specification.new do |s|
     "spec/acl-entry_spec.rb",
      "spec/acl-owner_spec.rb",
      "spec/acl_spec.rb",
-     "spec/authorization_spec.rb",
      "spec/bucket_spec.rb",
      "spec/object_spec.rb",
      "spec/service_spec.rb",

@@ -3,12 +3,13 @@ include GoogleStorage
 
 describe "Service" do
   before :each do
-    @authorization = Authorization.new('development', 'fixtures/google-storage.yml')
-    @service       = Service.new(@authorization)
+    config = Configuration.new('fixtures/google-storage.yml')
+    @credentials = config.credentials :development
+    @service       = Service.new(@credentials)
   end
   
   it "should create an instance of Service" do
-    @authorization.should be_an_instance_of Authorization
+    @credentials.should be_an_instance_of Credentials
     @service.should be_an_instance_of Service
   end
 

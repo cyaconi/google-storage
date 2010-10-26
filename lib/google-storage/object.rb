@@ -9,7 +9,7 @@ module GoogleStorage
       @path          = path
       @canonicalpath = [ bucket.name, path ].join("/").gsub(/\/{2,}/, "/")
       @bucket        = bucket
-      @authorization = bucket.authorization
+      @credentials = bucket.credentials
       instance_eval &block if block_given?
     end
     

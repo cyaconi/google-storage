@@ -1,12 +1,12 @@
 module GoogleStorage
   class Bucket < RequestMethods
     attr_reader :name
-    attr_reader :authorization
+    attr_reader :credentials
     attr :acl
     
-    def initialize name, authorization
-      @name          = name
-      @authorization = authorization
+    def initialize name, credentials
+      @name        = name
+      @credentials = credentials
     end
 
     def open &block
@@ -16,8 +16,8 @@ module GoogleStorage
       self
     end
 
-    def self.open name, authorization, &block
-      bucket = Bucket.new(name, authorization)
+    def self.open name, credentials, &block
+      bucket = Bucket.new(name, credentials)
       bucket.open &block
     end
 
@@ -43,8 +43,8 @@ module GoogleStorage
       open &block
     end
     
-    def self.create name, authorization, acl = nil, &block
-      bucket = Bucket.new(name, authorization)
+    def self.create name, credentials, acl = nil, &block
+      bucket = Bucket.new(name, credentials)
       bucket.create acl, &block
     end
 
@@ -65,8 +65,8 @@ module GoogleStorage
       exec :delete, :path => @name
     end
     
-    def self.destroy name, authorization
-      bucket = Bucket.new(name, authorization)
+    def self.destroy name, credentials
+      bucket = Bucket.new(name, credentials)
       bucket.destroy
     end
     
@@ -147,7 +147,11 @@ module GoogleStorage
     end
     
     def [] path, options = { }
-      GoogleStorage::Object.new(self, path) { open options } rescue nil
+      GoogleStorage::Object.new(self, path) { open options } 
+    rescue => e
+      puts e
+      puts e.backtrace
+      nil
     end
     
     # copy an object from another bucket into this bucket
