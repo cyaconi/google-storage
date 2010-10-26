@@ -7,6 +7,9 @@ configuration:
   # default storage provider id (GOOG1 or AWS) when requesting service
   provider: GOOG1 
 
+  # default storage provider host/end-point
+  host: commondatastorage.googleapis.com
+  
 # set the appropriate values in this configuration file if you wish to run the 
 # tests; ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
 credentials:  
