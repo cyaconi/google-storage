@@ -1,5 +1,8 @@
 0.1.0  [UNRELEASED]
 -------------------
+This release simplifies instantiation of the request objects, but introduces
+breaking changes:
+
 - [BREAKING CHANGE] Modified google-storage config layout.
 - [BREAKING CHANGE] Service class now requires a Configuration object 
   (instead of Authorization)
