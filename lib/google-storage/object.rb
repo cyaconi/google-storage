@@ -21,7 +21,7 @@ module GoogleStorage
       @canonicalpath.match(/_\$folder\$$/) != nil
     end
     
-    alias :directory?, :folder?
+    alias :directory? :folder?
     
     # retrieves the object's metadata 
     # raises NoSuchKeyException if the object does not exist
