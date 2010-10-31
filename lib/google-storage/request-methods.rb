@@ -18,8 +18,6 @@ module GoogleStorage
       body = options.delete(:body)
       path = options.delete(:path)
       url  = URI.parse("#{protocol}://#{host}/#{path}")
-      
-      puts ">>>>>#{url}<<<<<<<<<"
 
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
@@ -61,17 +59,17 @@ module GoogleStorage
     private
     # TODO: un-uglify this implementation
     def protocol
-      @@configuration ? @@configuration.protocol : 'https'
+      GoogleStorage.protocol   
     end
     
     # TODO: un-uglify this implementation
     def host
-      @@configuration ? @@configuration.host : HOST
+      GoogleStorage.host
     end
 
     # TODO: un-uglify this implementation
     def provider
-      @@configuration ? @@configuration.provider : 'GOOG1'
+      GoogleStorage.provider
     end
   end
 end

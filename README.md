@@ -127,7 +127,7 @@ using one of the key-pairs listed in the configuration file:
     # or, use the first key-pair listed in the configuration file
     credentials = config.credentials            
 
-Following is the layout of the configuration file as expected by the 
+The following is the layout of the configuration file as expected by the 
 `GoogleStorage::Configuration` class:
 
     # gem/library runtime settings
@@ -171,8 +171,17 @@ Following is the layout of the configuration file as expected by the
         secretkey: AJYdwOneMor123Ex+ampl33tAbCdfegd2dfPiUNH                
 
 For more information related to authorization requirements to Google Storage
-see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
+see the Google Storage API's 
+[Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
 
+Settings
+--------
+The `settings` section of the configuration file dictates the behavior of the 
+gem at runtime. Assigning a `Configuration` object to the 
+`GoogleStorage::settings` attribute applies its values:
+
+    GoogleStorage.settings = Configuration.new '/path/to/google-storage.yml'
+    
 Dependencies
 ------------
 Runtime:

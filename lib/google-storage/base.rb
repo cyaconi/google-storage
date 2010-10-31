@@ -1,5 +1,7 @@
 module GoogleStorage
-  HOST = "commondatastorage.googleapis.com"
+  DEFAULT_HOST     = "commondatastorage.googleapis.com"
+  DEFAULT_PROVIDER = "GOOG1"
+  DEFAULT_PROTOCOL = "https"
 
   class RequestMethodException < Exception; end
   

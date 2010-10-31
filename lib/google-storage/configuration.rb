@@ -12,9 +12,9 @@ module GoogleStorage
       end
       config.recursively!{ |h| h.symbolize_keys! }
       settings  = config[:settings]
-      @provider = settings[:provider] || 'GOOG1'
-      @protocol = settings[:ssl] ? 'https' : 'http'
-      @host     = settings[:host] || HOST
+      @provider = settings[:provider] || DEFAULT_PROVIDER
+      @protocol = settings[:ssl] == false ? 'http' : DEFAULT_PROTOCOL
+      @host     = settings[:host] || DEFAULT_HOST
       config[:credentials].each do |k, v|
         next if [:id, :email, :'group-email', :'apps-domain'].include? k
         (@authkeys ||= {})[k] = v
@@ -27,7 +27,17 @@ module GoogleStorage
     end
   end
   
-  def self.configure(configuration)
-    @@configuration = configuration
+  # apply configuration object to gem runtime
+  # TODO: not really sure about this method... smells bad somehow
+  def self.settings configuration
+    @@settings = configuration
+  end
+  
+  def method_missing name, *args
+    if args.empty? && [ :protocol, :host, :provider ].include?(name)
+      class_variable_defined?(:@@settings) ? @@settings.send(name) : const_get(:"DEFAULT_#{name.to_s.upcase}")
+    else 
+      super name, args
+    end
   end
 end
