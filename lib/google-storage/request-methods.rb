@@ -12,12 +12,14 @@ module GoogleStorage
       message = error.xpath("/Error/Message").text
       raise GoogleStorage::RequestMethodException(code), "#{message}" 
     end
-    
+
     def exec(verb, options = { })
       verb = verb.to_s.upcase
       body = options.delete(:body)
       path = options.delete(:path)
-      url  = URI.parse("https://#{HOST}/#{path}")
+      url  = URI.parse("#{protocol}://#{host}/#{path}")
+      
+      puts ">>>>>#{url}<<<<<<<<<"
 
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
@@ -30,7 +32,7 @@ module GoogleStorage
       params = options.delete(:params)
       path   = url.path 
       path << "?acl" if options.delete(:acl)
-      headers['Authorization'] = @credentials.authorization(verb, path, headers, "GOOG1")
+      headers['Authorization'] = @credentials.authorization(verb, path, headers, provider)
       
       config = { 
         :method  => verb,
@@ -54,6 +56,22 @@ module GoogleStorage
       @hydra.run                                
       
       req.handled_response
+    end
+    
+    private
+    # TODO: un-uglify this implementation
+    def protocol
+      @@configuration ? @@configuration.protocol : 'https'
+    end
+    
+    # TODO: un-uglify this implementation
+    def host
+      @@configuration ? @@configuration.host : HOST
+    end
+
+    # TODO: un-uglify this implementation
+    def provider
+      @@configuration ? @@configuration.provider : 'GOOG1'
     end
   end
 end

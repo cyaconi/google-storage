@@ -131,7 +131,7 @@ Following is the layout of the configuration file as expected by the
 `GoogleStorage::Configuration` class:
 
     # gem/library runtime settings
-    configuration:
+    settings:
       # default protocol used when accessing the service provider
       ssl: true
 

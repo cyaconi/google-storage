@@ -1,7 +1,8 @@
 module GoogleStorage
   class Configuration
-    attr :ssl
-    attr :provider
+    attr_reader :protocol
+    attr_reader :provider
+    attr_reader :host
     
     def initialize(config_path_or_hash)
       config = case config_path_or_hash
@@ -10,8 +11,10 @@ module GoogleStorage
       else raise ArgumentError, "config must either be a Hash or String"
       end
       config.recursively!{ |h| h.symbolize_keys! }
-      @provider = config[:provider]
-      @ssl      = config[:ssl]
+      settings  = config[:settings]
+      @provider = settings[:provider] || 'GOOG1'
+      @protocol = settings[:ssl] ? 'https' : 'http'
+      @host     = settings[:host] || HOST
       config[:credentials].each do |k, v|
         next if [:id, :email, :'group-email', :'apps-domain'].include? k
         (@authkeys ||= {})[k] = v
@@ -22,5 +25,9 @@ module GoogleStorage
       keypair = label.nil? ? @authkeys.first : @authkeys[label.to_sym]
       Credentials.new keypair
     end
+  end
+  
+  def self.configure(configuration)
+    @@configuration = configuration
   end
 end

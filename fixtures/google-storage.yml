@@ -1,6 +1,6 @@
 ---
 # gem/library runtime settings
-configuration:
+settings:
   # default protocol used when accessing the service provider
   ssl: true
 
