@@ -222,9 +222,9 @@ Releases
 --------
 Please read the `RELEASENOTES` file for the details of each release. 
 
-Patch releases do not include breaking changes while releases that bumps the 
-major or minor components of the version string may or may not include 
-breaking changes.
+In general: patch releases will not include breaking changes while releases 
+that bumps the major or minor components of the version string may or may not 
+include breaking changes.
 
 Author
 ------
