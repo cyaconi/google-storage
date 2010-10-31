@@ -1,5 +1,16 @@
 module GoogleStorage
   class Credentials
+    def self.parse(credentials)
+      case credentials
+      when Credentials
+        credentials
+      when Hash
+        Credentials.new credentials.symbolize_keys
+      else raise ArgumentError, \
+        "credentials must be one of Credentials, or Hash"
+      end
+    end
+    
     # creates an Credentials string generator using the key-pair
     def initialize(keypair)
       @keypair = keypair

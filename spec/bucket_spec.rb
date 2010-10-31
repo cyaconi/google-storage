@@ -8,6 +8,19 @@ describe "Bucket" do
     @bucket      = Bucket.new('jurisgalang', @credentials)
   end
 
+  it "should accept a Hash as credentials" do
+    config      = YAML.load(File.read 'fixtures/google-storage.yml')
+    credentials = config['credentials']['development']
+    credentials.should be_an_instance_of Hash
+    credentials.has_key?('accesskey').should eql true
+    credentials.has_key?('secretkey').should eql true
+    ak = credentials['accesskey']
+    sk = credentials['secretkey']
+    lambda{ Bucket.new('jurisgalang', credentials) }.should_not raise_error    
+    lambda{ Bucket.new('jurisgalang', :accesskey => ak, :secretkey => sk) }.should_not raise_error    
+    lambda{ Bucket.new('jurisgalang', 'accesskey' => ak, 'secretkey' => sk) }.should_not raise_error    
+  end
+  
   it "should return an instance of object and its metadata attributes populated" do
     lambda{ @object = @bucket['lorem-ipsum.txt'] }.should_not raise_error    
     @object.should be_an_instance_of GoogleStorage::Object

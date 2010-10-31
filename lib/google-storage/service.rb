@@ -1,7 +1,7 @@
 module GoogleStorage
   class Service < RequestMethods
     def initialize credentials
-      @credentials = credentials
+      @credentials = Credentials.parse(credentials)
     end
     
     # returns a Bucket object

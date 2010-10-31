@@ -6,7 +6,7 @@ module GoogleStorage
     
     def initialize name, credentials
       @name        = name
-      @credentials = credentials
+      @credentials = Credentials.parse(credentials)
     end
 
     def open &block

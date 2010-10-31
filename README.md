@@ -20,6 +20,9 @@ The basics:
     credentials = Credentials.new(:accesskey => '...', :secretkey => '...')
     service     = Service.new(credentials)
 
+    # create a service object (alternative method)
+    service = Service.new(:accesskey => '...', :secretkey => '...')
+
     # list buckets
     service.buckets.each do |entry|
       puts "#{entry[:name]} #{entry[:creation_date]}"
@@ -27,6 +30,13 @@ The basics:
 
     # get a reference to a bucket
     bucket = service["my-bucket"] 
+
+    # get a reference to a bucket (using a credentials object)
+    credentials = Credentials.new(:accesskey => '...', :secretkey => '...')
+    bucket      = Bucket.new "my-bucket", credentials
+
+    # get a reference to a bucket (alternative method)
+    bucket = Bucket.new "my-bucket", :accesskey => '...', :secretkey => '...'
 
     # list contents of bucket
     bucket.objects.each do |entry|
@@ -44,6 +54,15 @@ The basics:
     
     # get a reference to an object
     object = bucket["lorem-ipsum.txt"]
+    
+    # check if an object is a file
+    object.file?
+
+    # check if an object is a directory?
+    object.directory?
+
+    # check if an object is a directory? (alternative method)
+    object.folder?
     
     # set a object's acl
     object.acl = Acl.new(File.read "/path/to/acl.xml")
@@ -94,8 +113,22 @@ The basics:
 
 Configuration 
 -------------
-The `GoogleStorage::Credentials` class by default expects to find a file 
-named `google-storage.yml` in the current directory when it is instantiated.
+Create a `GoogleStorage::Configuration` object by passing the path to a YAML
+file, or `Hash` containing the expected configuration keys and values:
+
+    config = Configuration.new('/path/to/google-storage.yml')
+
+The `credentials` method will return a `GoogleStorage::Credentials` object
+using one of the key-pairs listed in the configuration file:
+
+    # use the key-pair labeled `development`
+    credentials = config.credentials :development 
+    
+    # or, use the first key-pair listed in the configuration file
+    credentials = config.credentials            
+
+Following is the layout of the configuration file as expected by the 
+`GoogleStorage::Configuration` class:
 
     # google storage id     
     id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351

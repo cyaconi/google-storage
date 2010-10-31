@@ -5,7 +5,20 @@ describe "Service" do
   before :each do
     config = Configuration.new('fixtures/google-storage.yml')
     @credentials = config.credentials :development
-    @service       = Service.new(@credentials)
+    @service     = Service.new(@credentials)
+  end
+
+  it "should accept a Hash as credentials" do
+    config      = YAML.load(File.read 'fixtures/google-storage.yml')
+    credentials = config['credentials']['development']
+    credentials.should be_an_instance_of Hash
+    credentials.has_key?('accesskey').should eql true
+    credentials.has_key?('secretkey').should eql true
+    ak = credentials['accesskey']
+    sk = credentials['secretkey']
+    lambda{ Service.new(credentials) }.should_not raise_error    
+    lambda{ Service.new(:accesskey=> ak, :secretkey => sk) }.should_not raise_error    
+    lambda{ Service.new('accesskey' => ak, 'secretkey' => sk) }.should_not raise_error    
   end
   
   it "should create an instance of Service" do
