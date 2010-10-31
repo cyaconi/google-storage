@@ -130,32 +130,45 @@ using one of the key-pairs listed in the configuration file:
 Following is the layout of the configuration file as expected by the 
 `GoogleStorage::Configuration` class:
 
-    # google storage id     
-    id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
-    
-    # email address 
-    email: user@example.com                                             
-    
-    # forum/group email address (optional)
-    group-email: gs-discussion@googlegroups.com                          
-    
-    # google apps email address (optional)
-    apps-domain: user@example.com                                        
+    # gem/library runtime settings
+    configuration:
+      # default protocol used when accessing the service provider
+      ssl: true
 
-    # google storage accesskey/secretkey section; 
-    # define as many pairs as needed - the label for each
-    # pair is arbitrary
-    development:                                                         
-      accesskey: GOOGTBR1091493294JAG                                   
-      secretkey: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7                
-                                                                         
-    stage:                                                               
-      accesskey: GOOGNBAS5DFA9FF9234C                                   
-      secretkey: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw                
-                                                                         
-    production:                                                          
-      accesskey: GOOGNBSBNLA9234ZV94D                                   
-      secretkey: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww                
+      # default storage provider id (GOOG1 or AWS) when requesting service
+      provider: GOOG1 
+
+      # default storage provider host/end-point
+      host: commondatastorage.googleapis.com
+  
+    # set the appropriate values in this configuration file if you wish to run the 
+    # tests; ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
+    credentials:  
+      # google storage id
+      id: 01231abcdef01293129481abcdef9856722458923abcdef93498ab2342bacdfe
+
+      # email address
+      email: user@example.com
+
+      # forum/group email address (optional)
+      group-email: gs-discussion@googlegroups.com
+
+      # google apps email address (optional)
+      apps-domain: user@example.com
+
+      # google storage access_key/secret_key section; define as many pairs as \
+      # needed - the label for each pair is arbitrary.
+      development:                                                         
+        accesskey: GOOGLQ344542322342BB                                   
+        secretkey: TkIkd012+eUnkxNeXCzmPkilJeR5ZaODNEYp7uz6                
+
+      stage:                                                              
+        accesskey: GOOGRESAMPLE12345BAC                                   
+        secretkey: Hanothe3xamplea134af45sdgikLdz2rx1XRnmqb                
+
+      production:                                                          
+        accesskey: GOOGHJKL33MASAMPLE34                                   
+        secretkey: AJYdwOneMor123Ex+ampl33tAbCdfegd2dfPiUNH                
 
 For more information related to authorization requirements to Google Storage
 see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)

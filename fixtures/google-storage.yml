@@ -17,13 +17,13 @@ credentials:
   id: 01231abcdef01293129481abcdef9856722458923abcdef93498ab2342bacdfe
 
   # email address
-  email: youremail@example.com
+  email: user@example.com
 
   # forum/group email address (optional)
   group-email: gs-discussion@googlegroups.com
 
   # google apps email address (optional)
-  apps-domain: youremail@example.com
+  apps-domain: user@example.com
 
   # google storage access_key/secret_key section; define as many pairs as \
   # needed - the label for each pair is arbitrary.
