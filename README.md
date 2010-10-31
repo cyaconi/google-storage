@@ -177,8 +177,8 @@ see the Google Storage API's
 Settings
 --------
 The `settings` section of the configuration file dictates the behavior of the 
-gem at runtime. Assigning a `Configuration` object to the 
-`GoogleStorage::settings` attribute applies its values:
+gem at runtime. Assigning a `Configuration` object to the `GoogleStorage::settings` 
+attribute applies its values:
 
     GoogleStorage.settings = Configuration.new '/path/to/google-storage.yml'
     
