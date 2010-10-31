@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
-  s.date = %q{2010-10-25}
+  s.date = %q{2010-10-30}
   s.description = %q{
       Ruby bindings for the GoogleStorage API
 
@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
      "lib/google-storage/base.rb",
      "lib/google-storage/bucket.rb",
      "lib/google-storage/configuration.rb",
+     "lib/google-storage/credentials.rb",
      "lib/google-storage/facets/blank.rb",
      "lib/google-storage/facets/file/write.rb",
      "lib/google-storage/facets/hash/op_mul.rb",
