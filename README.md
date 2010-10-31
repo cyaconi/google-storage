@@ -174,8 +174,6 @@ For more information related to authorization requirements to Google Storage
 see the Google Storage API's 
 [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
 
-Settings
---------
 The `settings` section of the configuration file dictates the behavior of the 
 gem at runtime. Assigning a `Configuration` object to the `GoogleStorage::settings` 
 attribute applies its values:
