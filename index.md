@@ -22,14 +22,12 @@ The basics:
     require 'google-storage'
     include GoogleStorage
     
-    # load a configuration file
-    gsconfig = Configuration.new("/path/to/google-storage.yml")
+    # create a credentials object to use for services
+    credentials = Credentials.new :accesskey => '...', :secretkey => '...'
+    service     = Service.new credentials
 
-    # get a service object
-    service = Service.new(gsconfig)
-
-    # get a service object, specify which key pair to use
-    service = Service.new(gsconfig, "development")
+    # create a service object (alternative method)
+    service = Service.new :accesskey => '...', :secretkey => '...'
 
     # list buckets
     service.buckets.each do |entry|
@@ -39,16 +37,17 @@ The basics:
     # get a reference to a bucket
     bucket = service["my-bucket"] 
 
+    # get a reference to a bucket (using a credentials object)
+    credentials = Credentials.new :accesskey => '...', :secretkey => '...'
+    bucket      = Bucket.new "my-bucket", credentials
+
+    # get a reference to a bucket (alternative method)
+    bucket = Bucket.new "my-bucket", :accesskey => '...', :secretkey => '...'
+
     # list contents of bucket
     bucket.objects.each do |entry|
       puts "#{entry[:key]} #{entry[:last_modified]} #{entry[:size]}"
     end
-    
-    # print/display if object list is truncated
-    puts bucket.objects.truncated?
-
-    # print/display common prefixes used to get the list of objects
-    puts bucket.objects.prefixes.inspect
 
     # create a folder
     bucket.mkdir "private/folder"
@@ -61,6 +60,15 @@ The basics:
     
     # get a reference to an object
     object = bucket["lorem-ipsum.txt"]
+    
+    # check if an object is a file
+    object.file?
+
+    # check if an object is a directory?
+    object.directory?
+
+    # check if an object is a directory? (alternative method)
+    object.folder?
     
     # set a object's acl
     object.acl = Acl.new(File.read "/path/to/acl.xml")
@@ -110,25 +118,50 @@ The basics:
     bucket.copy "source-bucket/photo.jpg", :dest => "private/folder/photo.jpg"
     {% endhighlight %}
 
-Configuration 
--------------
-The `GoogleStorage::Configuration` class by default expects to find a file 
-named `google-storage.yml` in the current directory when it is instantiated.
+Credentials
+-----------
+Create a `GoogleStorage::Configuration` object by passing the path to a YAML
+file, or `Hash` containing the expected configuration keys and values:
+
+    {% highlight ruby %}
+    config = Configuration.new '/path/to/google-storage.yml'
+    {% endhighlight %}
+
+The `credentials` method will return a `GoogleStorage::Credentials` object
+using one of the key-pairs listed in the configuration file:
+
+    {% highlight ruby %}
+    # use the key-pair labeled `development`
+    credentials = config.credentials :development 
+
+    # or, use the first key-pair listed in the configuration file
+    credentials = config.credentials            
+    {% endhighlight %}
+
+You can then use the credentials object as described above.
+
+Configuration File
+------------------
+The following is the layout of the configuration file as expected by the 
+`GoogleStorage::Configuration` class:
 
     {% highlight yaml %}
     # gem/library runtime settings
-    configuration:
+    settings:
       # default protocol used when accessing the service provider
       ssl: true
 
       # default storage provider id (GOOG1 or AWS) when requesting service
       provider: GOOG1 
 
+      # default storage provider host/end-point
+      host: commondatastorage.googleapis.com
+  
     # set the appropriate values in this configuration file if you wish to run the 
     # tests; ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
-    authorization:  
+    credentials:  
       # google storage id
-      id: 00234982384abcfdef892348bdc234f30636bcbeaf4398502aced39242ade351
+      id: 01231abcdef01293129481abcdef9856722458923abcdef93498ab2342bacdfe
 
       # email address
       email: user@example.com
@@ -141,22 +174,36 @@ named `google-storage.yml` in the current directory when it is instantiated.
 
       # google storage access_key/secret_key section; define as many pairs as \
       # needed - the label for each pair is arbitrary.
-      development:
-        access-key: GOOGTBR1091493294JAG
-        secret-key: TiKladfjkdfwe+14sdjf56dsjfshz56sfjshgwn7
+      development:                                                         
+        accesskey: GOOGLQ344542322342BB                                   
+        secretkey: TkIkd012+eUnkxNeXCzmPkilJeR5ZaODNEYp7uz6                
 
-      stage:
-        access-key: GOOGNBAS5DFA9FF9234C
-        secret-key: Hwjefwj63gjshgahzziuwfksiudh38wfhwjh2ejw
+      stage:                                                              
+        accesskey: GOOGRESAMPLE12345BAC                                   
+        secretkey: Hanothe3xamplea134af45sdgikLdz2rx1XRnmqb                
 
-      production:
-        access-key: GOOGNBSBNLA9234ZV94D
-        secret-key: AKjkdsf42dsfs2342rnkjc2dzskjga+afjafkjww
-    {% endhighlight %}
+      production:                                                          
+        accesskey: GOOGHJKL33MASAMPLE34                                   
+        secretkey: AJYdwOneMor123Ex+ampl33tAbCdfegd2dfPiUNH                
+      {% endhighlight %}
 
 For more information related to authorization requirements to Google Storage
-see the Google Storage API's [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
+see the Google Storage API's 
+[Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
 
+Runtime Settings
+----------------
+The `settings` section of the configuration file dictates the behavior of the 
+gem at runtime. Assigning a `Configuration` object to the `GoogleStorage::settings` 
+attribute applies its values:
+
+    {% highlight yaml %}
+    GoogleStorage.settings = Configuration.new '/path/to/google-storage.yml'
+    {% endhighlight %}
+
+Values from the `settings` section will then be used, eg: use `https` as the
+protocol when sending requests.
+    
 Dependencies
 ------------
 Runtime:
@@ -194,6 +241,14 @@ Note on Patches/Pull Requests
   your own version, that is fine but bump version in a commit by itself I can 
   ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
+
+Releases
+--------
+Please read the `RELEASENOTES` file for the details of each release. 
+
+In general: patch releases will not include breaking changes while releases 
+that bumps the major or minor components of the version string may or may not 
+include breaking changes.
 
 Author
 ------
