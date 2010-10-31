@@ -17,11 +17,11 @@ The basics:
     include GoogleStorage
     
     # create a credentials object to use for services
-    credentials = Credentials.new(:accesskey => '...', :secretkey => '...')
-    service     = Service.new(credentials)
+    credentials = Credentials.new :accesskey => '...', :secretkey => '...'
+    service     = Service.new credentials
 
     # create a service object (alternative method)
-    service = Service.new(:accesskey => '...', :secretkey => '...')
+    service = Service.new :accesskey => '...', :secretkey => '...'
 
     # list buckets
     service.buckets.each do |entry|
@@ -32,7 +32,7 @@ The basics:
     bucket = service["my-bucket"] 
 
     # get a reference to a bucket (using a credentials object)
-    credentials = Credentials.new(:accesskey => '...', :secretkey => '...')
+    credentials = Credentials.new :accesskey => '...', :secretkey => '...'
     bucket      = Bucket.new "my-bucket", credentials
 
     # get a reference to a bucket (alternative method)
@@ -116,7 +116,7 @@ Configuration
 Create a `GoogleStorage::Configuration` object by passing the path to a YAML
 file, or `Hash` containing the expected configuration keys and values:
 
-    config = Configuration.new('/path/to/google-storage.yml')
+    config = Configuration.new '/path/to/google-storage.yml'
 
 The `credentials` method will return a `GoogleStorage::Credentials` object
 using one of the key-pairs listed in the configuration file:
