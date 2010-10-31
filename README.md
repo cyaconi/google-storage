@@ -111,8 +111,8 @@ The basics:
     # copy an object from another bucket into a specific location
     bucket.copy "source-bucket/photo.jpg", :dest => "private/folder/photo.jpg"
 
-Configuration 
--------------
+Credentials
+-----------
 Create a `GoogleStorage::Configuration` object by passing the path to a YAML
 file, or `Hash` containing the expected configuration keys and values:
 
@@ -127,6 +127,10 @@ using one of the key-pairs listed in the configuration file:
     # or, use the first key-pair listed in the configuration file
     credentials = config.credentials            
 
+You can then use the credentials object as described above.
+
+Configuration File
+------------------
 The following is the layout of the configuration file as expected by the 
 `GoogleStorage::Configuration` class:
 
@@ -174,11 +178,16 @@ For more information related to authorization requirements to Google Storage
 see the Google Storage API's 
 [Developer Guide](https://code.google.com/apis/storage/docs/developer-guide.html#authorization)
 
+Runtime Settings
+----------------
 The `settings` section of the configuration file dictates the behavior of the 
 gem at runtime. Assigning a `Configuration` object to the `GoogleStorage::settings` 
 attribute applies its values:
 
     GoogleStorage.settings = Configuration.new '/path/to/google-storage.yml'
+
+Values from the `settings` section will then be used, eg: use `https` as the
+protocol when sending requests.
     
 Dependencies
 ------------
