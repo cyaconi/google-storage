@@ -9,7 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Juris Galang"]
-  s.date = %q{2010-10-30}
+  s.date = %q{2010-11-03}
+  s.default_executable = %q{gs}
   s.description = %q{
       Ruby bindings for the GoogleStorage API
 
@@ -17,6 +18,7 @@ Gem::Specification.new do |s|
       storage infrastructure. You can use Google Storage to store all sizes of files.
     }
   s.email = %q{jurisgalang@gmail.com}
+  s.executables = ["gs"]
   s.extra_rdoc_files = [
     "README.md"
   ]
