@@ -17,7 +17,7 @@ module GoogleStorage
     end
     
     # generates an authorization string
-    def authorization(verb, path, headers, authsig)
+    def authorization(verb, path, headers, authsig = GoogleStorage.provider)
       "#{authsig} #{@keypair[:accesskey]}:" \
       "#{signature message(verb, path, headers)}"
     end

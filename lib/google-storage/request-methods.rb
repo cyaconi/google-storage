@@ -17,7 +17,7 @@ module GoogleStorage
       verb = verb.to_s.upcase
       body = options.delete(:body)
       path = options.delete(:path)
-      url  = URI.parse("#{protocol}://#{host}/#{path}")
+      url  = service_url path
 
       headers = { }
       headers['Content-Length'] = body.nil? ? "0" : body.to_s.length
@@ -30,7 +30,7 @@ module GoogleStorage
       params = options.delete(:params)
       path   = url.path 
       path << "?acl" if options.delete(:acl)
-      headers['Authorization'] = @credentials.authorization(verb, path, headers, provider)
+      headers['Authorization'] = @credentials.authorization(verb, path, headers)
       
       config = { 
         :method  => verb,
@@ -57,19 +57,8 @@ module GoogleStorage
     end
     
     private
-    # TODO: un-uglify this implementation
-    def protocol
-      GoogleStorage.protocol   
-    end
-    
-    # TODO: un-uglify this implementation
-    def host
-      GoogleStorage.host
-    end
-
-    # TODO: un-uglify this implementation
-    def provider
-      GoogleStorage.provider
+    def service_url path
+      URI.parse "#{GoogleStorage.protocol}://#{GoogleStorage.host}/#{path}"
     end
   end
 end
