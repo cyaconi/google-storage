@@ -1,5 +1,5 @@
-0.1.0  [UNRELEASED]
--------------------
+0.1.0 [0ct 30, 2010]
+--------------------
 This release simplifies instantiation of the request objects, but introduces
 breaking changes:
 
