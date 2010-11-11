@@ -1,3 +1,5 @@
+GoogleStorage Gem
+===================
 This gem implements Ruby bindings for the GoogleStorage API.
 
 [Google Storage](http://code.google.com/apis/storage/) lets you store, share, and manage your data on Google's 
