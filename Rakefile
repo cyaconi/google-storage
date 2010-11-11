@@ -14,6 +14,7 @@ begin
     gem.email = "jurisgalang@gmail.com"
     gem.homepage = "http://jurisgalang.github.com/google-storage"
     gem.authors = ["Juris Galang"]
+    gem.add_dependency "named-parameters", ">= 0.0.2"
     gem.add_dependency "typhoeus", ">= 0.1.31"
     gem.add_dependency "nokogiri", ">= 1.4.3.1"
     #gem.add_dependency "facets", ">= 2.8.4"

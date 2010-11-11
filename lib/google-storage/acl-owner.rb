@@ -4,12 +4,11 @@ module GoogleStorage
       attr_reader :canonical_id
       attr_reader :name
 
+      has_named_parameters :initialize, :required => [ :id, :name ]
       def initialize(identity)
         identity      = identity.to_h if identity.respond_to? :xpath
         @canonical_id = "#{identity[:id]}"
-        raise ArgumentError, "A canonical id value must be specified using the `id` key" \
-          unless Acl.canonical_id? @canonical_id
-        @name = "#{identity[:name]}"
+        @name         = "#{identity[:name]}"
       end
       
       def to_xml

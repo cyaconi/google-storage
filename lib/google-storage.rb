@@ -8,6 +8,8 @@ require 'base64'
 require 'openssl'
 require 'nokogiri'
 
+require 'named-parameters'
+
 require 'google-storage/facets/file/write'
 require 'google-storage/facets/hash/op_mul'
 require 'google-storage/facets/hash/recursively'
