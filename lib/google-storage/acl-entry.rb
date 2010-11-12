@@ -3,6 +3,7 @@ module GoogleStorage
     class Entry
       private_class_method :new
 
+      has_named_parameters :UserById, :required => :id
       def self.UserById(permission, identity)
         raise ArgumentError, "Canonical ID must be specified." unless Acl.canonical_id? "#{identity[:id]}"
         new(__method__, permission, identity[:id], identity[:name])
@@ -14,6 +15,7 @@ module GoogleStorage
         new(__method__, permission, email, identity[:name])
       end
 
+      has_named_parameters :GroupById, :required => :id
       def self.GroupById(permission, identity)
         raise ArgumentError, "Canonical ID must be specified." unless Acl.canonical_id? "#{identity[:id]}"
         new(__method__, permission, identity[:id], identity[:name])
@@ -25,6 +27,7 @@ module GoogleStorage
         new(__method__, permission, email, identity[:name])
       end
 
+      has_named_parameters :GroupByDomain, :required => :domain
       def self.GroupByDomain(permission, identity)
         raise ArgumentError, "Domain Name must be specified." unless Acl.domain? "#{identity[:domain]}"
         new(__method__, permission, identity[:domain], identity[:name])
