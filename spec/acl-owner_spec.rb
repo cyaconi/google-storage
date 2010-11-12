@@ -7,7 +7,7 @@ describe "Acl::Owner" do
     @name         = "Jane Smith"
   end
   
-  it "should ensure canonical id is specified when the created" do
+  it "should ensure canonical id is specified" do
     lambda { Acl::Owner.new(:id => "jane.smith@example.com") }.should raise_error
     lambda { Acl::Owner.new(:id => @canonical_id) }.should_not raise_error
     lambda { Acl::Owner.new(:id => @canonical_id, :name => @name) }.should_not raise_error

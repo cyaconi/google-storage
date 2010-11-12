@@ -7,34 +7,31 @@ settings:
   # default storage provider id (GOOG1 or AWS) when requesting service
   provider: GOOG1 
 
-  # default storage provider host/end-point
-  host: commondatastorage.googleapis.com
-  
 # set the appropriate values in this configuration file if you wish to run the 
 # tests; ref: https://code.google.com/apis/storage/docs/developer-guide.html#authorization
 credentials:  
   # google storage id
-  id: 01231abcdef01293129481abcdef9856722458923abcdef93498ab2342bacdfe
+  id: 00b4903a9731eaf427785677addb8149a8758f95696c05323a928b8b6c531d5e
 
   # email address
-  email: user@example.com
+  email: jurisgalang@gmail.com
 
   # forum/group email address (optional)
   group-email: gs-discussion@googlegroups.com
 
   # google apps email address (optional)
-  apps-domain: user@example.com
+  apps-domain: jurisgalang@gmail.com
 
   # google storage access_key/secret_key section; define as many pairs as \
   # needed - the label for each pair is arbitrary.
   development:                                                         
-    accesskey: GOOGLQ344542322342BB                                   
-    secretkey: TkIkd012+eUnkxNeXCzmPkilJeR5ZaODNEYp7uz6                
+    accesskey: GOOGLT3YRF3BP2RYPZO3                                   
+    secretkey: TiVkPQ0h+eUnkxNeXCzmPfjIJKM5ZaODNEYp7uz6                
 
   stage:                                                              
-    accesskey: GOOGRESAMPLE12345BAC                                   
-    secretkey: Hanothe3xamplea134af45sdgikLdz2rx1XRnmqb                
+    accesskey: GOOGRE4XCRUJ6B2SNVEB                                   
+    secretkey: HwT04LD2UcPyvYDcuH5tOPgimlKIJz2rx1XRnmqb                
 
   production:                                                          
-    accesskey: GOOGHJKL33MASAMPLE34                                   
-    secretkey: AJYdwOneMor123Ex+ampl33tAbCdfegd2dfPiUNH                
+    accesskey: GOOGVTMN2VEFMHT2XHED                                   
+    secretkey: AJYdwu7BuKiItz9yCAe75UzwAG01uPNE5jFPiUNH                

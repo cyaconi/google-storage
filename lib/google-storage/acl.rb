@@ -93,11 +93,14 @@ module GoogleStorage
 
       raise doc.errors.first unless doc.errors.empty?
         
-      @owner   = Owner.new(doc.at("//Owner").to_h)
+      identity = doc.at("//Owner").to_h
+      identity.delete(:text)
+      @owner   = Owner.new(identity)
       @entries = doc.xpath("//Entries/*").map do |node|
         scope      = node.xpath("Scope/@type").to_s
         permission = node.xpath("Permission").text
         identity   = node.at("Scope").to_h
+        identity.delete(:text)
         args       = [ permission ]
         args << identity unless Acl.special_scope? scope.methodize
         Entry.send(scope, *args)

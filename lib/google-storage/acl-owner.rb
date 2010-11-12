@@ -4,9 +4,10 @@ module GoogleStorage
       attr_reader :canonical_id
       attr_reader :name
 
-      has_named_parameters :initialize, :required => [ :id, :name ]
+      has_named_parameters :initialize, :required => :id, :optional => [ :name, :display_name ]
       def initialize(identity)
-        identity      = identity.to_h if identity.respond_to? :xpath
+        identity = identity.to_h if identity.respond_to? :xpath
+        raise ArgumentError, "Canonical ID must be specified." unless Acl.canonical_id? "#{identity[:id]}"
         @canonical_id = "#{identity[:id]}"
         @name         = "#{identity[:name]}"
       end
