@@ -25,6 +25,7 @@ module GoogleStorage
       headers['User-Agent']     = USER_AGENT
       headers['Date']           = timestamp
       headers['Host']           = url.host
+      headers['x-goog-project-id'] = @credentials.projectid
       options.each{ |k, v| headers[k.to_s] = v }
 
       params = options.delete(:params)

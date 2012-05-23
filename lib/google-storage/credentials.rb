@@ -12,9 +12,13 @@ module GoogleStorage
     end
     
     # creates an Credentials string generator using the key-pair
-    has_named_parameters :initialize, :required => [ :accesskey, :secretkey ]
+    has_named_parameters :initialize, :required => [ :accesskey, :secretkey, :projectid ]
     def initialize(keypair)
       @keypair = keypair
+    end
+
+    def projectid
+      @keypair[:projectid]
     end
     
     # generates an authorization string
