@@ -90,12 +90,14 @@ module GoogleStorage
     end
     
     private
-    def load_metadata headers, content
+    def load_metadata h, content
       @content = content
       #headers.rekey! { |k| (k =~ /^(ID|ETag)$/ ? \
       #  k.downcase : k).methodize.gsub(/-/, '_') }
-      headers.rekey! { |k| k.downcase.gsub(/-/, '_') }
+      # headers = h.rekey{ |k| k.downcase.gsub(/-/, '_') }
+      headers = h.map {|k,v| [k.downcase.gsub(/-/,'_'),v]}
       this = class << self; self; end
+
       headers.each do |k, v|
         next if k =~ / / 
         normalize = lambda do |k, v| 
